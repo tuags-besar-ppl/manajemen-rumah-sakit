@@ -42,9 +42,9 @@ const Reports = () => {
 
   const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
   const [isUpdateStatusDialogOpen, setIsUpdateStatusDialogOpen] = useState(false);
-  const [newStatus, setNewStatus] = useState<'reported' | 'in-repair' | 'resolved'>('in-repair');
+  const [newStatus, setNewStatus] = useState<'dilaporkan' | 'dalam perbaikan' | 'sudah diperbaiki'>('dalam perbaikan');
   const [statusNotes, setStatusNotes] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'reported' | 'in-repair' | 'resolved'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'dilaporkan' | 'dalam perbaikan' | 'sudah diperbaiki'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
   if (!user) return null;
@@ -68,16 +68,16 @@ const Reports = () => {
     
     updateDamageReportStatus(selectedReportId, newStatus, statusNotes);
     setSelectedReportId(null);
-    setNewStatus('in-repair');
+    setNewStatus('dalam perbaikan');
     setStatusNotes('');
     setIsUpdateStatusDialogOpen(false);
   };
 
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
-      case 'reported': return 'bg-red-100 text-red-800';
-      case 'in-repair': return 'bg-yellow-100 text-yellow-800';
-      case 'resolved': return 'bg-green-100 text-green-800';
+      case 'dilaporkan': return 'bg-red-100 text-red-800';
+      case 'dalam perbaikan': return 'bg-yellow-100 text-yellow-800';
+      case 'sudah diperbaiki': return 'bg-green-100 text-green-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -86,10 +86,10 @@ const Reports = () => {
     <Layout>
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Equipment Damage Reports</h1>
+          <h1 className="text-2xl font-bold">Laporan Kerusakan Peralatan</h1>
           {hasRole('nurse') && (
-            <Button onClick={() => navigate('/reports/new')}>
-              Report Damage
+            <Button onClick={() => navigate('/lapor/new')}>
+              Laporkan Kerusakan
             </Button>
           )}
         </div>
@@ -98,12 +98,12 @@ const Reports = () => {
           <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
-                Search Reports
+                Cari Laporan
               </label>
               <Input
                 id="search"
                 type="text"
-                placeholder="Search by equipment name, reporter, or description..."
+                placeholder="Cari berdasarkan nama peralatan, reporter, atau deskripsi..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -121,9 +121,9 @@ const Reports = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Statuses</SelectItem>
-                  <SelectItem value="reported">Reported</SelectItem>
-                  <SelectItem value="in-repair">In Repair</SelectItem>
-                  <SelectItem value="resolved">Resolved</SelectItem>
+                  <SelectItem value="dilaporkan">Reported</SelectItem>
+                  <SelectItem value="dalam perbaikan">In Repair</SelectItem>
+                  <SelectItem value="sudah diperbaiki">Resolved</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -168,8 +168,8 @@ const Reports = () => {
                         <TableCell className="max-w-xs truncate">{report.description}</TableCell>
                         <TableCell>
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusBadgeColor(report.status)}`}>
-                            {report.status === 'reported' ? 'Reported' :
-                             report.status === 'in-repair' ? 'In Repair' : 'Resolved'}
+                            {report.status === 'dilaporkan' ? 'dilaporkan' :
+                             report.status === 'dalam perbaikan' ? 'dalam perbaikan' : 'sudah diperbaiki'}
                           </span>
                         </TableCell>
                         <TableCell>
@@ -184,13 +184,13 @@ const Reports = () => {
                               View
                             </Button>
                             
-                            {hasRole(['manager', 'logistics_staff']) && report.status !== 'resolved' && (
+                            {hasRole(['manager', 'logistics_staff']) && report.status !== 'sudah diperbaiki' && (
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => {
                                   setSelectedReportId(report.id);
-                                  setNewStatus(report.status === 'reported' ? 'in-repair' : 'resolved');
+                                  setNewStatus(report.status === 'dilaporkan' ? 'dalam perbaikan' : 'sudah diperbaiki');
                                   setIsUpdateStatusDialogOpen(true);
                                 }}
                               >
@@ -229,9 +229,9 @@ const Reports = () => {
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="reported">Reported</SelectItem>
-                      <SelectItem value="in-repair">In Repair</SelectItem>
-                      <SelectItem value="resolved">Resolved</SelectItem>
+                      <SelectItem value="dilaporkan">dilaporkan</SelectItem>
+                      <SelectItem value="dalam perbaikan">dalam perbaikan</SelectItem>
+                      <SelectItem value="sudah diperbaiki">sudah diperbaiki</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -239,16 +239,16 @@ const Reports = () => {
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Notes</label>
                   <Textarea
-                    placeholder="Enter notes about this status update"
+                    placeholder="Masukkan catatan tentang pembaruan status ini"
                     value={statusNotes}
                     onChange={(e) => setStatusNotes(e.target.value)}
                   />
                 </div>
                 
-                {newStatus === 'resolved' && (
+                {newStatus === 'sudah diperbaiki' && (
                   <div className="bg-yellow-50 border border-yellow-200 rounded p-2">
                     <p className="text-sm text-yellow-800">
-                      Marking as resolved will automatically update the equipment status to "Available".
+                    Menandai sebagai terselesaikan akan secara otomatis memperbarui status peralatan menjadi “Tersedia”.
                     </p>
                   </div>
                 )}

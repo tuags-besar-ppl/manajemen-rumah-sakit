@@ -32,8 +32,8 @@ const NewReport = () => {
     if (!selectedEquipmentId) {
       toast({
         title: "Error",
-        description: "Please select an equipment item.",
-        variant: "destructive"
+        description: "Silakan pilih item peralatan.",
+        variant: "Rusak"
       });
       return;
     }
@@ -41,8 +41,8 @@ const NewReport = () => {
     if (!description.trim()) {
       toast({
         title: "Error",
-        description: "Please provide a description of the damage.",
-        variant: "destructive"
+        description: "Mohon berikan deskripsi kerusakan.",
+        variant: "Rusak"
       });
       return;
     }
@@ -56,15 +56,15 @@ const NewReport = () => {
       notes: ''
     });
     
-    navigate('/reports');
+    navigate('/lapor');
   };
 
   return (
     <Layout>
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Report Equipment Damage</h1>
-          <Button variant="outline" onClick={() => navigate('/reports')}>
+          <h1 className="text-2xl font-bold">Laporkan Kerusakan Peralatan</h1>
+          <Button variant="outline" onClick={() => navigate('/lapor')}>
             Cancel
           </Button>
         </div>
@@ -84,7 +84,7 @@ const NewReport = () => {
                 </SelectTrigger>
                 <SelectContent>
                   {equipment
-                    .filter(item => item.status !== 'damaged')
+                    .filter(item => item.status !== 'rusak')
                     .map(item => (
                     <SelectItem key={item.id} value={item.id}>
                       {item.name} - {item.location}
@@ -99,15 +99,15 @@ const NewReport = () => {
                 Damage Description <span className="text-red-500">*</span>
               </label>
               <Textarea
-                id="description"
+                id="deskripsi"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Describe the damage or malfunction in detail"
+                placeholder="Jelaskan kerusakan atau kegagalan fungsi secara rinci"
                 rows={5}
                 required
               />
               <p className="text-xs text-gray-500">
-                Please be specific about the issues you've observed. Include information about when the problem started and any error messages or sounds.
+              Harap jelaskan secara spesifik masalah yang Anda amati. Sertakan informasi tentang kapan masalah mulai terjadi dan pesan atau suara kesalahan.
               </p>
             </div>
             
@@ -115,12 +115,12 @@ const NewReport = () => {
               <Button 
                 variant="outline" 
                 type="button" 
-                onClick={() => navigate('/reports')}
+                onClick={() => navigate('/lapor')}
               >
                 Cancel
               </Button>
               <Button type="submit">
-                Submit Report
+                Submit Laporan
               </Button>
             </div>
           </form>
