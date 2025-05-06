@@ -114,16 +114,16 @@ const Categories = () => {
     <Layout>
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Equipment Categories</h1>
+          <h1 className="text-2xl font-bold">Kategori Peralatan</h1>
           <Button onClick={() => setIsAddDialogOpen(true)}>
-            Add Category
+            Tambah Kategori
           </Button>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border">
           <div className="p-4">
             <p className="text-gray-600 mb-4">
-              Manage equipment categories to better organize your inventory. Categories help staff find equipment more easily.
+              Kategori Peralatan
             </p>
             
             {categories.length === 0 ? (

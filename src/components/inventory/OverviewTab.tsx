@@ -146,10 +146,6 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
               <div className="text-2xl font-bold text-red-500">{needMaintenanceCount}</div>
               <div className="text-sm ml-2 text-muted-foreground">item memerlukan perhatian segera</div>
             </div>
-            <div className="flex items-center mt-2">
-              <div className="text-lg font-medium text-yellow-500">{maintenanceSoonCount}</div>
-              <div className="text-sm ml-2 text-muted-foreground">item jatuh tempo pemeliharaan dalam 30 hari</div>
-            </div>
           </CardContent>
         </Card>
         
@@ -161,11 +157,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
             <div className="flex items-center">
               <div className="text-2xl font-bold text-blue-500">{pendingRequestsCount}</div>
               <div className="text-sm ml-2 text-muted-foreground">permintaan tertunda</div>
-            </div>
-            <div className="flex items-center mt-2">
-              <div className="text-lg font-medium text-green-500">{approvedRequestsCount}</div>
-              <div className="text-sm ml-2 text-muted-foreground">disetujui, menunggu penyelesaian</div>
-            </div>
+            </div>  
           </CardContent>
         </Card>
         
@@ -177,10 +169,6 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
             <div className="flex items-center">
               <div className="text-2xl font-bold text-red-500">{reportedDamageCount}</div>
               <div className="text-sm ml-2 text-muted-foreground">laporan baru</div>
-            </div>
-            <div className="flex items-center mt-2">
-              <div className="text-lg font-medium text-yellow-500">{inRepairCount}</div>
-              <div className="text-sm ml-2 text-muted-foreground">item sedang dalam perbaikan</div>
             </div>
           </CardContent>
         </Card>
