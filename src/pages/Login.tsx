@@ -50,8 +50,8 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Sistem Manajemen Peralatan Rumah Sakit</CardTitle>
-          <CardDescription>Masuk untuk mengakses dashboard Anda</CardDescription>
+          <CardTitle className="text-2xl">Manajemen Peralatan Rumah Sakit</CardTitle>
+          <img src="/hospital.png" alt="Logo Rumah Sakit" className="mx-auto mb-4" width={100} />
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
