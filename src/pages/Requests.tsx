@@ -42,9 +42,9 @@ const Requests = () => {
 
   const [selectedRequestId, setSelectedRequestId] = useState<string | null>(null);
   const [isUpdateStatusDialogOpen, setIsUpdateStatusDialogOpen] = useState(false);
-  const [newStatus, setNewStatus] = useState<'tertunda' | 'disetujui' | 'ditolak' | 'selesai'>('disetujui');
+  const [newStatus, setNewStatus] = useState<'delayed' | 'approved' | 'rejected' | 'completed'>('approved');
   const [statusNotes, setStatusNotes] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'semua' | 'tertunda' | 'disetujui' | 'ditolak' | 'selesai'>('semua');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'delayed' | 'approved' | 'rejected' | 'completed'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
   if (!user) return null;
@@ -56,7 +56,7 @@ const Requests = () => {
     }
     
     // Filter by status
-    const matchesStatus = statusFilter === 'semua' || request.status === statusFilter;
+    const matchesStatus = statusFilter === 'all' || request.status === statusFilter;
     
     // Filter by search query
     const equipment = getEquipmentById(request.equipmentId);
@@ -73,17 +73,17 @@ const Requests = () => {
     
     updateRequestStatus(selectedRequestId, newStatus, statusNotes);
     setSelectedRequestId(null);
-    setNewStatus('disetujui');
+    setNewStatus('approved');
     setStatusNotes('');
     setIsUpdateStatusDialogOpen(false);
   };
 
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
-      case 'tertunda': return 'bg-yellow-100 text-yellow-800';
-      case 'disetujui': return 'bg-green-100 text-green-800';
-      case 'ditolak': return 'bg-red-100 text-red-800';
-      case 'selesai': return 'bg-blue-100 text-blue-800';
+      case 'delayed': return 'bg-yellow-100 text-yellow-800';
+      case 'approved': return 'bg-green-100 text-green-800';
+      case 'rejected': return 'bg-red-100 text-red-800';
+      case 'completed': return 'bg-blue-100 text-blue-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -126,11 +126,11 @@ const Requests = () => {
                   <SelectValue placeholder="Filter berdasarkan status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="semua">semua</SelectItem>
-                  <SelectItem value="tertunda">tertunda</SelectItem>
-                  <SelectItem value="disetujui">disetujui</SelectItem>
-                  <SelectItem value="ditolak">ditolak</SelectItem>
-                  <SelectItem value="selesai">selesai</SelectItem>
+                  <SelectItem value="all">semua</SelectItem>
+                  <SelectItem value="delayed">tertunda</SelectItem>
+                  <SelectItem value="approved">disetujui</SelectItem>
+                  <SelectItem value="rejected">ditolak</SelectItem>
+                  <SelectItem value="completed">selesai</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -190,7 +190,7 @@ const Requests = () => {
                               Lihat
                             </Button>
                             
-                            {hasRole(['manager', 'logistics_staff']) && request.status === 'tertunda' && (
+                            {hasRole(['manager', 'logistics_staff']) && request.status === 'delayed' && (
                               <Button
                                 variant="outline"
                                 size="sm"
@@ -234,8 +234,8 @@ const Requests = () => {
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="disetujui">disetujui</SelectItem>
-                      <SelectItem value="ditolak">ditolak</SelectItem>
+                      <SelectItem value="approved">disetujui</SelectItem>
+                      <SelectItem value="rejected">ditolak</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -249,7 +249,7 @@ const Requests = () => {
                   />
                 </div>
                 
-                {newStatus === 'disetujui' && (
+                {newStatus === 'approved' && (
                   <div className="bg-green-50 border border-green-200 rounded p-2">
                     <p className="text-sm text-green-800">
                       Menyetujui permintaan ini akan secara otomatis mengirimkan pemberitahuan kepada pemohon.
