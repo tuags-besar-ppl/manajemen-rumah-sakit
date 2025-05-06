@@ -42,9 +42,9 @@ const Requests = () => {
 
   const [selectedRequestId, setSelectedRequestId] = useState<string | null>(null);
   const [isUpdateStatusDialogOpen, setIsUpdateStatusDialogOpen] = useState(false);
-  const [newStatus, setNewStatus] = useState<'pending' | 'approved' | 'denied' | 'completed'>('approved');
+  const [newStatus, setNewStatus] = useState<'tertunda' | 'disetujui' | 'ditolak' | 'selesai'>('disetujui');
   const [statusNotes, setStatusNotes] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved' | 'denied' | 'completed'>('all');
+  const [statusFilter, setStatusFilter] = useState<'semua' | 'tertunda' | 'disetujui' | 'ditolak' | 'selesai'>('semua');
   const [searchQuery, setSearchQuery] = useState('');
 
   if (!user) return null;
@@ -56,7 +56,7 @@ const Requests = () => {
     }
     
     // Filter by status
-    const matchesStatus = statusFilter === 'all' || request.status === statusFilter;
+    const matchesStatus = statusFilter === 'semua' || request.status === statusFilter;
     
     // Filter by search query
     const equipment = getEquipmentById(request.equipmentId);
@@ -73,17 +73,17 @@ const Requests = () => {
     
     updateRequestStatus(selectedRequestId, newStatus, statusNotes);
     setSelectedRequestId(null);
-    setNewStatus('approved');
+    setNewStatus('disetujui');
     setStatusNotes('');
     setIsUpdateStatusDialogOpen(false);
   };
 
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'approved': return 'bg-green-100 text-green-800';
-      case 'denied': return 'bg-red-100 text-red-800';
-      case 'completed': return 'bg-blue-100 text-blue-800';
+      case 'tertunda': return 'bg-yellow-100 text-yellow-800';
+      case 'disetujui': return 'bg-green-100 text-green-800';
+      case 'ditolak': return 'bg-red-100 text-red-800';
+      case 'selesai': return 'bg-blue-100 text-blue-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -92,10 +92,10 @@ const Requests = () => {
     <Layout>
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Equipment Requests</h1>
+          <h1 className="text-2xl font-bold">Permintaan Peralatan</h1>
           {hasRole('nurse') && (
             <Button onClick={() => navigate('/requests/new')}>
-              New Request
+              Permintaan Baru
             </Button>
           )}
         </div>
@@ -103,34 +103,34 @@ const Requests = () => {
         <div className="bg-white p-6 rounded-lg shadow-sm border">
           <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
-                Search Requests
+              <label htmlFor="cari" className="block text-sm font-medium text-gray-700 mb-1">
+                Cari Permintaan
               </label>
               <Input
-                id="search"
-                type="text"
-                placeholder="Search by equipment name, requester, or reason..."
+                id="cari"
+                type="teks"
+                placeholder="Cari berdasarkan nama peralatan, pemohon, atau alasan..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             <div>
               <label htmlFor="statusFilter" className="block text-sm font-medium text-gray-700 mb-1">
-                Filter by Status
+                Filter berdasarkan Status
               </label>
               <Select
                 value={statusFilter}
                 onValueChange={(value) => setStatusFilter(value as any)}
               >
                 <SelectTrigger id="statusFilter">
-                  <SelectValue placeholder="Filter by status" />
+                  <SelectValue placeholder="Filter berdasarkan status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Statuses</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="approved">Approved</SelectItem>
-                  <SelectItem value="denied">Denied</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="semua">semua</SelectItem>
+                  <SelectItem value="tertunda">tertunda</SelectItem>
+                  <SelectItem value="disetujui">disetujui</SelectItem>
+                  <SelectItem value="ditolak">ditolak</SelectItem>
+                  <SelectItem value="selesai">selesai</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -138,19 +138,19 @@ const Requests = () => {
 
           {filteredRequests.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
-              No equipment requests found matching the current filters.
+              Tidak ditemukan permintaan peralatan yang cocok dengan filter saat ini.
             </div>
           ) : (
             <div className="rounded-md border">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Equipment</TableHead>
-                    <TableHead>Requested By</TableHead>
-                    <TableHead>Reason</TableHead>
+                    <TableHead>Tanggal</TableHead>
+                    <TableHead>Peralatan</TableHead>
+                    <TableHead>Permintaan Oleh</TableHead>
+                    <TableHead>Alasan</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead className="w-[100px]">Actions</TableHead>
+                    <TableHead className="w-[100px]">Aksi</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -168,7 +168,7 @@ const Requests = () => {
                           {equipment ? (
                             <span className="font-medium">{equipment.name}</span>
                           ) : (
-                            <span className="text-gray-500">Unknown Equipment</span>
+                            <span className="text-gray-500">Peralatan Tidak Diketahui</span>
                           )}
                         </TableCell>
                         <TableCell>{request.requesterName}</TableCell>
@@ -187,10 +187,10 @@ const Requests = () => {
                                 navigate(`/equipment/${request.equipmentId}`);
                               }}
                             >
-                              View
+                              Lihat
                             </Button>
                             
-                            {hasRole(['manager', 'logistics_staff']) && request.status === 'pending' && (
+                            {hasRole(['manager', 'logistics_staff']) && request.status === 'tertunda' && (
                               <Button
                                 variant="outline"
                                 size="sm"
@@ -218,14 +218,14 @@ const Requests = () => {
       <Dialog open={isUpdateStatusDialogOpen} onOpenChange={setIsUpdateStatusDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Update Request Status</DialogTitle>
+            <DialogTitle>Update Status Permintaan</DialogTitle>
           </DialogHeader>
           
           <div className="space-y-4 py-4">
             {selectedRequestId && (
               <>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">New Status</label>
+                  <label className="text-sm font-medium">Status Baru</label>
                   <Select
                     value={newStatus}
                     onValueChange={(value) => setNewStatus(value as any)}
@@ -234,25 +234,25 @@ const Requests = () => {
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="approved">Approved</SelectItem>
-                      <SelectItem value="denied">Denied</SelectItem>
+                      <SelectItem value="disetujui">disetujui</SelectItem>
+                      <SelectItem value="ditolak">ditolak</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Notes</label>
+                  <label className="text-sm font-medium">Catatan</label>
                   <Textarea
-                    placeholder="Enter notes about this decision"
+                    placeholder="Masukkan catatan tentang keputusan ini"
                     value={statusNotes}
                     onChange={(e) => setStatusNotes(e.target.value)}
                   />
                 </div>
                 
-                {newStatus === 'approved' && (
+                {newStatus === 'disetujui' && (
                   <div className="bg-green-50 border border-green-200 rounded p-2">
                     <p className="text-sm text-green-800">
-                      Approving this request will automatically send a notification to the requester.
+                      Menyetujui permintaan ini akan secara otomatis mengirimkan pemberitahuan kepada pemohon.
                     </p>
                   </div>
                 )}
@@ -262,7 +262,7 @@ const Requests = () => {
           
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsUpdateStatusDialogOpen(false)}>
-              Cancel
+              Batal
             </Button>
             <Button onClick={handleStatusUpdate}>
               Update Status
