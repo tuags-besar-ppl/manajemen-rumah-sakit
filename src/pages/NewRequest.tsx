@@ -35,7 +35,7 @@ const NewRequest = () => {
     if (!selectedEquipmentId) {
       toast({
         title: "Error",
-        description: "Please select an equipment item.",
+        description: "Silakan pilih item peralatan.",
         variant: "destructive"
       });
       return;
@@ -44,7 +44,7 @@ const NewRequest = () => {
     if (!reason.trim()) {
       toast({
         title: "Error",
-        description: "Please provide a reason for the request.",
+        description: "Berikan alasan atas permintaan Anda.",
         variant: "destructive"
       });
       return;
@@ -66,30 +66,30 @@ const NewRequest = () => {
     <Layout>
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Request Equipment</h1>
+          <h1 className="text-2xl font-bold">Permintaan Peralatan</h1>
           <Button variant="outline" onClick={() => navigate('/requests')}>
-            Cancel
+            Batal
           </Button>
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow-sm border">
           {availableEquipment.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-600 mb-4">There is no available equipment to request at this time.</p>
-              <Button onClick={() => navigate('/equipment')}>View All Equipment</Button>
+              <p className="text-gray-600 mb-4">Tidak ada peralatan yang tersedia untuk diminta saat ini.</p>
+              <Button onClick={() => navigate('/equipment')}>Tampilkan Semua Peralatan</Button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <label htmlFor="equipment" className="block text-sm font-medium text-gray-700">
-                  Select Equipment <span className="text-red-500">*</span>
+                  Pilih Peralatan <span className="text-red-500">*</span>
                 </label>
                 <Select
                   value={selectedEquipmentId}
                   onValueChange={setSelectedEquipmentId}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select equipment" />
+                    <SelectValue placeholder="Pilih Peralatan" />
                   </SelectTrigger>
                   <SelectContent>
                     {availableEquipment.map(item => (
@@ -103,19 +103,18 @@ const NewRequest = () => {
               
               <div className="space-y-2">
                 <label htmlFor="reason" className="block text-sm font-medium text-gray-700">
-                  Reason for Request <span className="text-red-500">*</span>
+                  Alasan Permintaan <span className="text-red-500">*</span>
                 </label>
                 <Textarea
                   id="reason"
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  placeholder="Explain why you need this equipment and for how long"
+                  placeholder="Jelaskan mengapa Anda membutuhkan peralatan ini dan untuk berapa lama"
                   rows={5}
                   required
                 />
                 <p className="text-xs text-gray-500">
-                  Please be specific about why you need this equipment, which patient or procedure it's for,
-                  and how long you anticipate needing it.
+                  Harap jelaskan secara spesifik alasan Anda memerlukan peralatan ini, untuk pasien atau prosedur mana peralatan ini ditujukan, dan berapa lama Anda memperkirakan akan membutuhkannya.
                 </p>
               </div>
               
@@ -128,7 +127,7 @@ const NewRequest = () => {
                   Cancel
                 </Button>
                 <Button type="submit">
-                  Submit Request
+                  Submit Permintaan
                 </Button>
               </div>
             </form>
