@@ -11,6 +11,9 @@ class AuthController extends Controller
     // Menampilkan form login
     public function showLoginForm()
     {
+        if (Auth::check()) {
+            return $this->redirectBasedOnRole(Auth::user());
+        }
         return view('login');
     }
 
@@ -24,32 +27,35 @@ class AuthController extends Controller
     
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            
-            // Redirect based on user role
-            $user = Auth::user();
-            switch ($user->role) {
-                case 'manager':
-                    return redirect()->route('dashboard-manager');
-                case 'logistik':
-                    return redirect()->route('dashboard-logistik');
-                case 'perawat':
-                    return redirect()->route('dashboard-perawat');
-                default:
-                    // Default fallback if role doesn't match
-                    return redirect('/');
-            }
+            return $this->redirectBasedOnRole(Auth::user());
         }
     
         return back()->withErrors([
             'email' => 'Email atau password salah.',
         ]);
     }
-    
+
+    // Helper method untuk redirect berdasarkan role
+    private function redirectBasedOnRole($user)
+    {
+        switch ($user->role) {
+            case 'manager':
+                return redirect()->route('manager.dashboard');
+            case 'logistik':
+                return redirect()->route('logistik.dashboard');
+            case 'perawat':
+                return redirect()->route('perawat.dashboard');
+            default:
+                return redirect('/');
+        }
+    }
 
     // Logout
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect()->route('login');
     }
 }

@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\HospitalEquipmentController;
+use App\Http\Controllers\LogistikController;
 
 // Rute untuk login
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
@@ -16,25 +18,39 @@ Route::middleware(['auth'])->get('/dashboard', function () {
     
     switch ($user->role) {
         case 'manager':
-            return redirect()->route('dashboard-manager');
+            return redirect()->route('manager.dashboard');
         case 'logistik':
-            return redirect()->route('dashboard-logistik');
+            return redirect()->route('logistik.dashboard');
         case 'perawat':
-            return redirect()->route('dashboard-perawat');
+            return redirect()->route('perawat.dashboard');
         default:
             return redirect('/');
     }
 })->name('dashboard');
 
-// Rute untuk dashboard Manager
-Route::middleware(['auth', 'role:manager'])->get('/dashboard-manager', function () {
-    return view('manager.dashboard');  // Mengarahkan ke dashboard Manager
-})->name('dashboard-manager');
+// Rute untuk Manager
+Route::middleware(['auth', 'role:manager'])->prefix('manager')->group(function () {
+    Route::get('/', function () {
+        return view('manager.dashboard');
+    })->name('manager.dashboard');
+});
 
-Route::middleware(['auth', 'role:logistik'])->get('/dashboard-logistik', function () {
-    return view('logistik.dashboard');  // Mengarahkan ke dashboard Logistik
-})->name('dashboard-logistik');
+// Rute untuk Perawat
+Route::middleware(['auth', 'role:perawat'])->prefix('perawat')->group(function () {
+    Route::get('/', function () {
+        return view('perawat.dashboard');
+    })->name('perawat.dashboard');
+});
 
-Route::middleware(['auth', 'role:perawat'])->get('/dashboard-perawat', function () {
-    return view('perawat.dashboard');  // Mengarahkan ke dashboard Perawat
-})->name('dashboard-perawat');
+// Rute untuk Logistik
+Route::middleware(['auth', 'role:logistik'])->prefix('logistik')->group(function () {
+    // Dashboard
+    Route::get('/', [LogistikController::class, 'dashboard'])->name('logistik.dashboard');
+    
+    // Equipment Management
+    Route::resource('equipment', HospitalEquipmentController::class);
+    
+    // Equipment Location API
+    Route::get('/equipment/get-floors', [HospitalEquipmentController::class, 'getFloors'])->name('equipment.getFloors');
+    Route::get('/equipment/get-rooms', [HospitalEquipmentController::class, 'getRooms'])->name('equipment.getRooms');
+});
