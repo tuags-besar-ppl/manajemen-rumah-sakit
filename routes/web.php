@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\EquipmentRequestController;
 
 // Rute untuk login
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
@@ -38,3 +39,5 @@ Route::middleware(['auth', 'role:logistik'])->get('/dashboard-logistik', functio
 Route::middleware(['auth', 'role:perawat'])->get('/dashboard-perawat', function () {
     return view('perawat.dashboard');  // Mengarahkan ke dashboard Perawat
 })->name('dashboard-perawat');
+
+Route::middleware(['auth', 'role:perawat'])->get('/pinjam-alat', [EquipmentRequestController::class, 'create'])->name('borrow.create');
