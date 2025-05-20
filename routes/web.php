@@ -38,3 +38,19 @@ Route::middleware(['auth', 'role:logistik'])->get('/dashboard-logistik', functio
 Route::middleware(['auth', 'role:perawat'])->get('/dashboard-perawat', function () {
     return view('perawat.dashboard');  // Mengarahkan ke dashboard Perawat
 })->name('dashboard-perawat');
+
+Route::middleware(['auth', 'role:perawat'])->get('/pelaporan-alat', function () {
+    return view('perawat.pelaporan-alat');
+})->name('pelaporan-alat');
+
+Route::middleware(['auth', 'role:perawat'])->get('/pinjam-alat', function () {
+    return view('perawat.pinjam-alat');
+})->name('pinjam-alat');
+
+Route::middleware(['auth', 'role:perawat'])->get('/lapor-kerusakan-alat', function () {
+    return view('perawat.lapor-kerusakan-alat');
+})->name('lapor-kerusakan-alat');
+
+Route::middleware(['auth', 'role:perawat'])->get('/history-status-report', function () {
+    return view('perawat.history-status-report');
+})->name('history-status-report');
