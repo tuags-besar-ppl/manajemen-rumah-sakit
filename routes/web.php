@@ -54,3 +54,18 @@ Route::middleware(['auth', 'role:perawat'])->get('/lapor-kerusakan-alat', functi
 Route::middleware(['auth', 'role:perawat'])->get('/history-status-report', function () {
     return view('perawat.history-status-report');
 })->name('history-status-report');
+// Route untuk menyimpan laporan kerusakan alat
+Route::middleware(['auth', 'role:perawat'])->post('/lapor-kerusakan-alat', function () {
+    // Validasi input
+    $validated = request()->validate([
+        'alat_id' => 'required',
+        'deskripsi_kerusakan' => 'required|string',
+        'tanggal_kerusakan' => 'required|date',
+        'lokasi' => 'required|string',
+        'prioritas' => 'required|in:rendah,sedang,tinggi,kritis'
+    ]);
+
+    // TODO: Simpan data ke database
+    // Untuk sementara kita redirect kembali ke halaman form dengan pesan sukses
+    return redirect()->route('lapor-kerusakan-alat')->with('success', 'Laporan kerusakan berhasil disimpan');
+})->name('perawat.lapor-kerusakan.store');
