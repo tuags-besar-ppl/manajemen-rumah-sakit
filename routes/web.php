@@ -53,4 +53,9 @@ Route::middleware(['auth', 'role:logistik'])->prefix('logistik')->group(function
     // Equipment Location API
     Route::get('/equipment/get-floors', [HospitalEquipmentController::class, 'getFloors'])->name('equipment.getFloors');
     Route::get('/equipment/get-rooms', [HospitalEquipmentController::class, 'getRooms'])->name('equipment.getRooms');
+    
+    // Tambahkan rute untuk mengakses halaman perawat
+    Route::get('/perawat', function () {
+        return redirect()->route('perawat.dashboard');
+    })->name('logistik.to.perawat');
 });
