@@ -21,8 +21,6 @@ Route::middleware(['auth'])->get('/dashboard', function () {
             return redirect()->route('manager.dashboard');
         case 'logistik':
             return redirect()->route('logistik.dashboard');
-        case 'perawat':
-            return redirect()->route('perawat.dashboard');
         default:
             return redirect('/');
     }
@@ -33,13 +31,6 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->group(function (
     Route::get('/', function () {
         return view('manager.dashboard');
     })->name('manager.dashboard');
-});
-
-// Rute untuk Perawat
-Route::middleware(['auth', 'role:perawat'])->prefix('perawat')->group(function () {
-    Route::get('/', function () {
-        return view('perawat.dashboard');
-    })->name('perawat.dashboard');
 });
 
 // Rute untuk Logistik

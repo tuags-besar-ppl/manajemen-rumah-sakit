@@ -175,70 +175,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Low Stock Alerts -->
-        <div class="col-xl-4 col-lg-5">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-danger">Peringatan Stok Rendah</h6>
-                </div>
-                <div class="card-body">
-                    @forelse($lowStockEquipment ?? [] as $item)
-                    <div class="alert alert-danger d-flex align-items-center mb-2" role="alert">
-                        <i class="fas fa-exclamation-circle me-2"></i>
-                        <div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <strong>{{ $item->name }}</strong>
-                                @switch($item->status)
-                                    @case('tersedia')
-                                        <span class="badge bg-success ms-2">
-                                            <i class="fas fa-check-circle me-1"></i>
-                                            Tersedia
-                                        </span>
-                                        @break
-                                    @case('sedang_digunakan')
-                                        <span class="badge bg-info ms-2">
-                                            <i class="fas fa-sync me-1"></i>
-                                            Sedang Digunakan
-                                        </span>
-                                        @break
-                                    @case('rusak')
-                                        <span class="badge bg-danger ms-2">
-                                            <i class="fas fa-exclamation-triangle me-1"></i>
-                                            Rusak
-                                        </span>
-                                        @break
-                                @endswitch
-                            </div>
-                            <div class="mt-2">
-                                <div class="text-danger">
-                                    <i class="fas fa-box me-1"></i>
-                                    Stok: {{ $item->quantity }} {{ $item->unit }}
-                                    <small class="ms-1">(Min: {{ $item->minimum_stock }} {{ $item->unit }})</small>
-                                </div>
-                            </div>
-                            <div class="mt-2 small">
-                                <div class="d-flex align-items-center text-muted">
-                                    <i class="fas fa-map-marker-alt me-1"></i>
-                                    {{ $item->building }}, Lantai {{ $item->floor }},
-                                    @if($item->room_name)
-                                        {{ $item->room_name }}
-                                    @else
-                                        Ruang {{ $item->room }}
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @empty
-                    <div class="text-center py-4 text-muted">
-                        <i class="fas fa-check-circle fa-2x mb-2"></i>
-                        <p class="mb-0">Tidak ada peringatan stok rendah</p>
-                    </div>
-                    @endforelse
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -276,6 +212,62 @@
     }
     .alert:last-child {
         margin-bottom: 0;
+    }
+    .dashboard-card {
+        border-radius: 1rem;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        transition: transform 0.2s, box-shadow 0.2s;
+        position: relative;
+        overflow: hidden;
+        min-height: 120px;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+    .dashboard-card .icon-bg {
+        position: absolute;
+        right: 1.5rem;
+        bottom: 1rem;
+        font-size: 3.5rem;
+        color: rgba(255,255,255,0.18);
+        z-index: 0;
+    }
+    .dashboard-card .card-body {
+        position: relative;
+        z-index: 1;
+    }
+    .dashboard-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+    }
+    .dashboard-value {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 0;
+    }
+    .table thead th {
+        background: #f4f6fb;
+        font-weight: 600;
+        color: #495057;
+        border-top: none;
+    }
+    .table-hover tbody tr:hover {
+        background: #f0f4fa;
+    }
+    .badge-status {
+        font-size: 0.95rem;
+        padding: 0.4em 0.8em;
+        border-radius: 0.5rem;
+        font-weight: 500;
+    }
+    @media (max-width: 767.98px) {
+        .dashboard-card {
+            margin-bottom: 1rem;
+        }
     }
 </style>
 @endpush
