@@ -5,25 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manager Dashboard - Sistem Management Alat Rumah Sakit</title>
     @vite('resources/css/app.css')
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    @yield('head')
 </head>
 <body class="bg-gray-50">
     <!-- Header Bar -->
-    <div class="fixed top-0 right-0 left-72 h-16 bg-white border-b border-gray-200 z-10 flex justify-between items-center px-8">
-        <div class="text-xl font-semibold text-gray-800">
-            Sistem Management Alat Rumah Sakit
-        </div>
-        <div class="flex items-center space-x-4">
-            <form action="{{ route('logout') }}" method="POST" class="m-0">
-                @csrf
-                <button type="submit" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors">
-                    <i class="fa-solid fa-sign-out-alt mr-2"></i>
-                    Logout
-                </button>
-            </form>
-        </div>
+<div class="fixed top-0 right-0 left-72 h-16 bg-white border-b border-gray-200 z-10 flex justify-between items-center px-8">
+    <div class="text-xl font-semibold text-gray-800">
+        Sistem Management Alat Rumah Sakit
     </div>
+    <div class="flex items-center space-x-4">
+        <form action="/logout" method="POST" class="mb-0">
+            @csrf
+        <button 
+            type="submit" 
+            class="px-4 py-2 bg-blue-600 text-white border border-blue-600 rounded hover:bg-white hover:text-blue-600 transition">
+            Logout
+        </button>
+        </form>
+    </div>
+</div>
+
 
     <!-- Sidebar -->
     <aside class="fixed left-0 top-0 h-screen w-72 bg-gradient-to-b from-blue-600 to-blue-800 text-white">

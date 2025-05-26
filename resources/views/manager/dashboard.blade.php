@@ -122,7 +122,7 @@
         <!-- Low Stock Equipment -->
         <div class="bg-white rounded-xl shadow-lg">
             <div class="p-6 border-b border-gray-100">
-                <h5 class="text-xl font-semibold text-gray-800">Stok Menipis</h5>
+                <h5 class="text-xl font-semibold text-gray-800">Peringatan Stok Rendah</h5>
             </div>
             <div class="p-6">
                 <div class="overflow-x-auto">
