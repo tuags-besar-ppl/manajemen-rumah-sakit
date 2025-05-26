@@ -3,15 +3,14 @@
 @section('title', 'Form Lapor Kerusakan Alat')
 
 @section('content')
-<div class="main-content">
-    <h1 style="text-align:center; margin-top: 30px; font-size:2.5rem; color:#1e40af; font-weight:700;">
+<div class="main-content d-flex flex-column align-items-center justify-content-center" style="min-height: 80vh; width: 100%;">
+    <h1 style="text-align:center; margin-bottom: 30px; font-size:2.5rem; color:#1e40af; font-weight:700; width: 100%;">
         Form Lapor Kerusakan Alat
     </h1>
-    
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
+    <div class="container d-flex justify-content-center">
+        <div class="row w-100 justify-content-center">
+            <div class="col-xl-10 col-lg-12">
+                <div class="card" style="width: 100%;">
                     <div class="card-body">
                         <form action="{{ route('perawat.lapor-kerusakan.store') }}" method="POST">
                             @csrf
@@ -20,7 +19,9 @@
                                 <label for="alat_id" class="form-label">Pilih Alat</label>
                                 <select class="form-select @error('alat_id') is-invalid @enderror" id="alat_id" name="alat_id" required>
                                     <option value="">-- Pilih Alat --</option>
-                                    {{-- Data alat akan diisi nanti --}}
+                                    @foreach($equipments as $alat)
+                                        <option value="{{ $alat->id }}">{{ $alat->code }} - {{ $alat->name }} ({{ $alat->location }})</option>
+                                    @endforeach
                                 </select>
                                 @error('alat_id')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -48,8 +49,17 @@
 
                             <div class="mb-3">
                                 <label for="lokasi" class="form-label">Lokasi Alat</label>
-                                <input type="text" class="form-control @error('lokasi') is-invalid @enderror" 
-                                    id="lokasi" name="lokasi" required placeholder="Masukkan lokasi alat">
+                                <select class="form-select @error('lokasi') is-invalid @enderror" id="lokasi" name="lokasi" required>
+                                    <option value="">-- Pilih Lokasi --</option>
+                                    <option value="Laboratorium A">Laboratorium A</option>
+                                    <option value="Laboratorium B">Laboratorium B</option>
+                                    <option value="Laboratorium C">Laboratorium C</option>
+                                    <option value="Ruang IGD">Ruang IGD</option>
+                                    <option value="Ruang Rawat Inap">Ruang Rawat Inap</option>
+                                    <option value="Ruang Operasi">Ruang Operasi</option>
+                                    <option value="Ruang Radiologi">Ruang Radiologi</option>
+                                    <option value="Ruang Farmasi">Ruang Farmasi</option>
+                                </select>
                                 @error('lokasi')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -79,4 +89,4 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection

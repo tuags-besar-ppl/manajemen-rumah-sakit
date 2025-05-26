@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Equipment;
+use App\Models\DamageReport;
 
 // Rute untuk login
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
@@ -47,7 +48,14 @@ Route::middleware(['auth', 'role:logistik'])->get('/dashboard-logistik', functio
 })->name('dashboard-logistik');
 
 Route::middleware(['auth', 'role:perawat'])->get('/dashboard-perawat', function () {
-    return view('perawat.dashboard');  // Mengarahkan ke dashboard Perawat
+    $statistics = [
+        'total' => \App\Models\Equipment::count(),
+        'tersedia' => \App\Models\Equipment::where('status', 'tersedia')->count(),
+        'sedang_digunakan' => \App\Models\Equipment::where('status', 'sedang_digunakan')->count(),
+        'rusak' => \App\Models\Equipment::where('status', 'rusak')->count(),
+    ];
+    $recentEquipment = \App\Models\Equipment::latest()->take(5)->get();
+    return view('perawat.dashboard', compact('statistics', 'recentEquipment'));
 })->name('dashboard-perawat');
 
 Route::middleware(['auth', 'role:perawat'])->get('/pelaporan-alat', function () {
@@ -59,15 +67,16 @@ Route::middleware(['auth', 'role:perawat'])->get('/pinjam-alat', function () {
 })->name('pinjam-alat');
 
 Route::middleware(['auth', 'role:perawat'])->get('/lapor-kerusakan-alat', function () {
-    return view('perawat.lapor-kerusakan-alat');
+    $equipments = \App\Models\Equipment::all();
+    return view('perawat.lapor-kerusakan-alat', compact('equipments'));
 })->name('lapor-kerusakan-alat');
 
 Route::middleware(['auth', 'role:perawat'])->get('/history-status-report', function () {
-    return view('perawat.history-status-report');
+    $reports = DamageReport::where('user_id', auth()->id())->latest()->get();
+    return view('perawat.history-status-report', compact('reports'));
 })->name('history-status-report');
 // Route untuk menyimpan laporan kerusakan alat
 Route::middleware(['auth', 'role:perawat'])->post('/lapor-kerusakan-alat', function () {
-    // Validasi input
     $validated = request()->validate([
         'alat_id' => 'required',
         'deskripsi_kerusakan' => 'required|string',
@@ -76,8 +85,16 @@ Route::middleware(['auth', 'role:perawat'])->post('/lapor-kerusakan-alat', funct
         'prioritas' => 'required|in:rendah,sedang,tinggi,kritis'
     ]);
 
-    // TODO: Simpan data ke database
-    // Untuk sementara kita redirect kembali ke halaman form dengan pesan sukses
+    // Simpan data ke tabel damage_reports
+    DamageReport::create([
+        'alat_id' => $validated['alat_id'],
+        'user_id' => auth()->id(),
+        'deskripsi_kerusakan' => $validated['deskripsi_kerusakan'],
+        'tanggal_kerusakan' => $validated['tanggal_kerusakan'],
+        'lokasi' => $validated['lokasi'],
+        'prioritas' => $validated['prioritas'],
+        'status' => 'diajukan'
+    ]);
     return redirect()->route('lapor-kerusakan-alat')->with('success', 'Laporan kerusakan berhasil disimpan');
 })->name('perawat.lapor-kerusakan.store');
 
