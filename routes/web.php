@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Equipment;
 
 // Rute untuk login
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
@@ -32,7 +33,17 @@ Route::middleware(['auth', 'role:manager'])->get('/dashboard-manager', function 
 })->name('dashboard-manager');
 
 Route::middleware(['auth', 'role:logistik'])->get('/dashboard-logistik', function () {
-    return view('logistik.dashboard');  // Mengarahkan ke dashboard Logistik
+    $statistics = [
+        'total' => Equipment::count(),
+        'tersedia' => Equipment::where('status', 'tersedia')->count(),
+        'sedang_digunakan' => Equipment::where('status', 'sedang_digunakan')->count(),
+        'rusak' => Equipment::where('status', 'rusak')->count(),
+    ];
+
+    $recentEquipment = Equipment::latest()->take(5)->get();
+    $lowStockEquipments = Equipment::where('quantity', '<=', 10)->get();
+
+    return view('logistik.dashboard', compact('statistics', 'recentEquipment', 'lowStockEquipments'));
 })->name('dashboard-logistik');
 
 Route::middleware(['auth', 'role:perawat'])->get('/dashboard-perawat', function () {
@@ -69,3 +80,5 @@ Route::middleware(['auth', 'role:perawat'])->post('/lapor-kerusakan-alat', funct
     // Untuk sementara kita redirect kembali ke halaman form dengan pesan sukses
     return redirect()->route('lapor-kerusakan-alat')->with('success', 'Laporan kerusakan berhasil disimpan');
 })->name('perawat.lapor-kerusakan.store');
+
+Route::middleware(['auth', 'role:logistik'])->resource('equipment', App\Http\Controllers\Logistik\EquipmentController::class);

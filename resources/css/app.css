@@ -11,4 +11,22 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+.table-scroll-wrapper {
+    position: relative;
+}
+.scroll-buttons {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.table-responsive {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
 
