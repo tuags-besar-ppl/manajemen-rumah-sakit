@@ -44,7 +44,7 @@
     </div>
     
     <div class="footer">
-        <p>Email ini dikirim dari Sistem Management Alat Rumah Sakit</p>
+        <p>Email ini dikirim dari Manager</p>
         <p>© {{ date('Y') }} Rumah Sakit.</p>
     </div>
 </body>

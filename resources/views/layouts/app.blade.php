@@ -182,10 +182,6 @@
     <div class="header-bar">
         <div class="header-title">Sistem Management Alat Rumah Sakit</div>
         <div class="header-actions">
-            <span class="notif-bell position-relative">
-                <i class="fa-solid fa-bell"></i>
-                <span class="notif-badge">1</span>
-            </span>
             <form action="/logout" method="POST" style="margin-bottom:0;">
                 @csrf
                 <button type="submit" class="logout-btn">Logout</button>
