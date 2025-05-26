@@ -15,12 +15,6 @@
             Sistem Management Alat Rumah Sakit
         </div>
         <div class="flex items-center space-x-4">
-            <div class="relative">
-                <button class="text-gray-600 hover:text-gray-800 transition-colors">
-                    <i class="fa-solid fa-bell text-xl"></i>
-                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">1</span>
-                </button>
-            </div>
             <form action="{{ route('logout') }}" method="POST" class="m-0">
                 @csrf
                 <button type="submit" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors">
