@@ -36,7 +36,7 @@ Route::middleware(['auth', 'role:manager'])->get('/dashboard-manager', function 
         'total' => Equipment::count(),
         'tersedia' => Equipment::where('status', 'tersedia')->count(),
         'sedang_digunakan' => Equipment::where('status', 'sedang_digunakan')->count(),
-        'rusak' => DamageReport::where('status', 'diajukan')->count(),
+        'laporan' => DamageReport::where('status', 'diajukan')->count(),
     ];
 
     $recentEquipment = Equipment::latest()->take(5)->get();
@@ -114,7 +114,7 @@ Route::middleware(['auth', 'role:perawat'])->post('/lapor-kerusakan-alat', funct
 Route::middleware(['auth', 'role:logistik'])->resource('equipment', App\Http\Controllers\Logistik\EquipmentController::class);
 Route::middleware(['auth', 'role:manager'])->resource('equipment', App\Http\Controllers\Logistik\EquipmentController::class);
 
-// Routes for Manager
+// Routes for email Manager
 Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/manager/email', [App\Http\Controllers\Manager\EmailController::class, 'index'])->name('manager.email');
     Route::post('/manager/email/send', [App\Http\Controllers\Manager\EmailController::class, 'send'])->name('manager.email.send');

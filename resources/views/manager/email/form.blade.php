@@ -112,7 +112,7 @@
 const templates = {
     laporan_harian: {
         subject: "Laporan Harian Peralatan Rumah Sakit - [Tanggal]",
-        message: `Dengan hormat,
+        message: `kepada perawat,
 
 Berikut adalah laporan harian mengenai status peralatan rumah sakit:
 
@@ -121,14 +121,13 @@ Berikut adalah laporan harian mengenai status peralatan rumah sakit:
 3. Peralatan Digunakan: [Jumlah]
 4. Peralatan Rusak: [Jumlah]
 
-Untuk detail lebih lanjut, silakan akses dashboard manager.
 
-Hormat kami,
-[Nama Manager]`
+Hormat,
+arya`
     },
     pemberitahuan: {
         subject: "Pemberitahuan - Pemeliharaan Peralatan",
-        message: `Kepada Yth.
+        message: `Kepada logistik.
 [Nama Penerima]
 
 Dengan ini kami informasikan bahwa akan dilakukan pemeliharaan rutin untuk peralatan-peralatan berikut:
@@ -145,7 +144,7 @@ Lokasi: [Lokasi]
 Mohon kerjasamanya untuk mengatur penggunaan peralatan pada waktu tersebut.
 
 Terima kasih,
-[Nama Manager]`
+arua`
     },
     pengumuman: {
         subject: "Pengumuman - Peralatan Baru",
@@ -160,7 +159,7 @@ Jumlah Unit: [Jumlah]
 Untuk penggunaan peralatan ini, mohon mengikuti prosedur yang berlaku.
 
 Terima kasih,
-[Nama Manager]`
+arya`
     }
 };
 

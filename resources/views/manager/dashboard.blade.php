@@ -74,7 +74,7 @@
                 </div>
                 <div class="flex items-end justify-between">
                     <div>
-                        <span class="text-3xl font-bold text-white">{{ $statistics['rusak'] }}</span>
+                        <span class="text-3xl font-bold text-white">{{ $statistics['laporan'] }}</span>
                         <p class="text-red-100 text-sm">Unit</p>
                     </div>
                 </div>
