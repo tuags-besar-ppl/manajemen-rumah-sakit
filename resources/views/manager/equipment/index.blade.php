@@ -86,89 +86,22 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <div class="flex space-x-2">
-                                    <button type="button" 
-                                            class="text-blue-600 hover:text-blue-800" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#detailModal{{ $equipment->id }}"
-                                            title="Lihat Detail">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </button>
                                     <a href="{{ route('equipment.edit', $equipment->id) }}" 
                                        class="text-yellow-600 hover:text-yellow-800"
                                        title="Edit">
                                         <i class="fa-solid fa-edit"></i>
                                     </a>
-                                    <form action="{{ route('equipment.destroy', $equipment->id) }}" 
-                                          method="POST" 
-                                          class="inline-block"
-                                          onsubmit="return confirm('Apakah Anda yakin ingin menghapus peralatan ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" 
-                                                class="text-red-600 hover:text-red-800"
-                                                title="Hapus">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </form>
+                                    <button type="button" 
+                                            class="text-red-600 hover:text-red-800"
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#deleteModal{{ $equipment->id }}"
+                                            title="Hapus">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
 
-                        <!-- Detail Modal -->
-                        <div class="modal fade" id="detailModal{{ $equipment->id }}" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title text-lg font-semibold">Detail Peralatan</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="grid grid-cols-2 gap-4">
-                                            <div>
-                                                <h6 class="text-sm font-medium text-gray-600">Kode Peralatan</h6>
-                                                <p class="text-gray-900">{{ $equipment->code }}</p>
-                                            </div>
-                                            <div>
-                                                <h6 class="text-sm font-medium text-gray-600">Nama Peralatan</h6>
-                                                <p class="text-gray-900">{{ $equipment->name }}</p>
-                                            </div>
-                                            <div>
-                                                <h6 class="text-sm font-medium text-gray-600">Lokasi</h6>
-                                                <p class="text-gray-900">{{ $equipment->location }}</p>
-                                            </div>
-                                            <div>
-                                                <h6 class="text-sm font-medium text-gray-600">Status</h6>
-                                                <p>
-                                                    @switch($equipment->status)
-                                                        @case('tersedia')
-                                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                                Tersedia
-                                                            </span>
-                                                            @break
-                                                        @case('sedang_digunakan')
-                                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                                                Sedang Digunakan
-                                                            </span>
-                                                            @break
-                                                        @case('rusak')
-                                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                                                Rusak
-                                                            </span>
-                                                            @break
-                                                    @endswitch
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <h6 class="text-sm font-medium text-gray-600">Stok</h6>
-                                                <p class="text-gray-900">{{ $equipment->quantity }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors" data-bs-dismiss="modal">
-                                            Tutup
-                                        </button>
-                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -26,27 +26,39 @@
                     @endif
 
                     <div>
-                        <label for="to" class="block text-sm font-medium text-gray-700 mb-2">Kepada</label>
-                        <input type="email" 
-                               class="w-full px-4 py-2.5 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-sm hover:border-gray-400 transition-colors @error('to') border-red-500 @enderror" 
-                               id="to" 
-                               name="to" 
-                               placeholder="Masukkan alamat email"
-                               value="{{ old('to') }}" 
-                               required>
+                        <label for="to" class="block text-sm font-medium text-gray-700 mb-2">
+                            Kepada <span class="text-red-500">*</span>
+                        </label>
+                        <select id="to" 
+                                name="to" 
+                                class="w-full px-4 py-2.5 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-sm hover:border-gray-400 transition-colors @error('to') border-red-500 @enderror"
+                                required>
+                            <option value="">Pilih Penerima</option>
+                            @foreach($users as $role => $roleUsers)
+                                <optgroup label="{{ ucfirst($role) }}">
+                                    @foreach($roleUsers as $user)
+                                        <option value="{{ $user->id }}" {{ old('to') == $user->id ? 'selected' : '' }}>
+                                            {{ $user->name }} ({{ $user->email }})
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+                            @endforeach
+                        </select>
                         @error('to')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subjek</label>
+                        <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">
+                            Subjek <span class="text-red-500">*</span>
+                        </label>
                         <input type="text" 
-                               class="w-full px-4 py-2.5 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-sm hover:border-gray-400 transition-colors @error('subject') border-red-500 @enderror" 
                                id="subject" 
                                name="subject" 
+                               value="{{ old('subject') }}"
                                placeholder="Masukkan subjek email"
-                               value="{{ old('subject') }}" 
+                               class="w-full px-4 py-2.5 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-sm hover:border-gray-400 transition-colors @error('subject') border-red-500 @enderror"
                                required>
                         @error('subject')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -54,7 +66,9 @@
                     </div>
 
                     <div>
-                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Pesan</label>
+                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">
+                            Pesan <span class="text-red-500">*</span>
+                        </label>
                         <textarea class="w-full px-4 py-2.5 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-sm hover:border-gray-400 transition-colors @error('message') border-red-500 @enderror" 
                                 id="message" 
                                 name="message" 
@@ -108,9 +122,10 @@ Berikut adalah laporan harian mengenai status peralatan rumah sakit:
 3. Peralatan Digunakan: [Jumlah]
 4. Peralatan Rusak: [Jumlah]
 
+Untuk detail lebih lanjut, silakan akses dashboard manager.
 
-Terima Kasih atas perhatian dan kerjasamanya.,
-arya`
+Hormat kami,
+[Nama Manager]`
     },
     pemberitahuan: {
         subject: "Pemberitahuan - Pemeliharaan Peralatan",
@@ -131,7 +146,7 @@ Lokasi: [Lokasi]
 Mohon kerjasamanya untuk mengatur penggunaan peralatan pada waktu tersebut.
 
 Terima kasih,
-arya`
+[Nama Manager]`
     },
     pengumuman: {
         subject: "Pengumuman - Peralatan Baru",
@@ -146,7 +161,7 @@ Jumlah Unit: [Jumlah]
 Untuk penggunaan peralatan ini, mohon mengikuti prosedur yang berlaku.
 
 Terima kasih,
-arya`
+[Nama Manager]`
     }
 };
 
