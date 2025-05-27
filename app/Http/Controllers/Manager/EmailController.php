@@ -6,25 +6,32 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ManagerEmail;
+use App\Models\User;
 
 class EmailController extends Controller
 {
     public function index()
     {
-        return view('manager.email.form');
+        $users = User::whereIn('role', ['perawat', 'logistik'])
+                    ->orderBy('role')
+                    ->get()
+                    ->groupBy('role');
+                    
+        return view('manager.email.form', compact('users'));
     }
 
     public function send(Request $request)
     {
         $request->validate([
-            'to' => 'required|email',
+            'to' => 'required|exists:users,id',
             'subject' => 'required|string|max:255',
             'message' => 'required|string'
         ]);
 
         try {
-            Mail::to($request->to)
-                ->send(new ManagerEmail($request->subject, $request->message));
+            $user = User::findOrFail($request->to);
+            Mail::to($user->email)
+                ->send(new ManagerEmail($request->subject, $request->message, $user));
 
             return back()->with('success', 'Email berhasil dikirim!');
         } catch (\Exception $e) {

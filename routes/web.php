@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Equipment;
 use App\Models\DamageReport;
+use App\Http\Controllers\NotificationController;
 
 // Rute untuk login
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
@@ -125,4 +126,11 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/manager/equipment/{equipment}/edit', [App\Http\Controllers\Manager\EquipmentController::class, 'edit'])->name('equipment.edit');
     Route::put('/manager/equipment/{equipment}', [App\Http\Controllers\Manager\EquipmentController::class, 'update'])->name('equipment.update');
     Route::delete('/manager/equipment/{equipment}', [App\Http\Controllers\Manager\EquipmentController::class, 'destroy'])->name('equipment.destroy');
+});
+
+// Notification Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
 });

@@ -6,6 +6,7 @@
     <title>@yield('title', 'Dashboard Perawat')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    @vite('resources/css/app.css')
     <style>
         body {
             background: #eaf1fb;
@@ -175,6 +176,54 @@
             transition: all 0.2s;
         }
         /* Tambahan styling yang umum jika ada */
+        /* Notification Styles */
+        .notification-item {
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            transition: background 0.2s;
+        }
+
+        .notification-item:hover {
+            background: #f9fafb;
+        }
+
+        .notification-item.unread {
+            background: #eff6ff;
+        }
+
+        .notification-item.unread:hover {
+            background: #dbeafe;
+        }
+
+        .notification-subject {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .notification-message {
+            color: #4b5563;
+            font-size: 0.875rem;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .notification-time {
+            color: #6b7280;
+            font-size: 0.75rem;
+        }
+
+        .mark-read-btn {
+            color: #2563eb;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            transition: background 0.2s;
+        }
+
+        .mark-read-btn:hover {
+            background: #eff6ff;
+        }
     </style>
     @yield('head')
 </head>
@@ -182,6 +231,29 @@
     <div class="header-bar">
         <div class="header-title">Sistem Management Alat Rumah Sakit</div>
         <div class="header-actions">
+            @if(in_array(auth()->user()->role, ['perawat', 'logistik']))
+                <button id="notifButton" class="notif-bell" onclick="toggleNotifications()">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span id="unreadCount" class="notif-badge" style="display: none;">0</span>
+                </button>
+                <!-- Notification Panel -->
+                <div id="notifPanel" class="notification-panel" style="display: none; position: absolute; top: 60px; right: 120px; width: 380px; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 1000;">
+                    <div style="padding: 16px; border-bottom: 1px solid #e5e7eb;">
+                        <h3 style="font-size: 1.1rem; font-weight: 600; color: #1f2937;">Notifikasi Email</h3>
+                    </div>
+                    <div id="notifList" style="max-height: 400px; overflow-y: auto;">
+                        <!-- Notifications will be inserted here -->
+                    </div>
+                    <div style="padding: 12px; border-top: 1px solid #e5e7eb; background: #f9fafb; border-radius: 0 0 12px 12px;">
+                        <button onclick="markAllAsRead()" 
+                                style="width: 100%; text-align: center; color: #2563eb; font-size: 0.875rem; padding: 6px; border-radius: 6px; transition: background 0.2s;"
+                                onmouseover="this.style.background='#f3f4f6'"
+                                onmouseout="this.style.background='transparent'">
+                            Tandai semua telah dibaca
+                        </button>
+                    </div>
+                </div>
+            @endif
             <form action="/logout" method="POST" style="margin-bottom:0;">
                 @csrf
                 <button type="submit" class="logout-btn">Logout</button>
@@ -210,11 +282,158 @@
         </div>
     </div>
 
+    <!-- Email Notification Component -->
+    <div id="emailNotifications" class="fixed top-4 right-4 z-50">
+        @if(auth()->user() && in_array(auth()->user()->role, ['perawat', 'logistik']))
+            <div class="relative">
+                <button id="notifButton" 
+                        onclick="toggleNotifications()"
+                        class="bg-white p-2 rounded-full shadow-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="fas fa-envelope text-gray-600"></i>
+                    <span id="unreadCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        0
+                    </span>
+                </button>
+
+                <div id="notifPanel" 
+                     class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200">
+                    <div class="p-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-800">Notifikasi Email</h3>
+                    </div>
+                    <div id="notifList" class="max-h-96 overflow-y-auto">
+                        <!-- Notifications will be inserted here -->
+                    </div>
+                    <div class="p-4 border-t border-gray-200 bg-gray-50">
+                        <button onclick="markAllAsRead()" 
+                                class="w-full text-center text-sm text-blue-600 hover:text-blue-800">
+                            Tandai semua telah dibaca
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @endif
+    </div>
+
     <div class="main-content">
         @yield('content')
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    @yield('scripts')
+    @stack('scripts')
+    <script>
+        let notifications = [];
+        let unreadCount = 0;
+
+        function toggleNotifications() {
+            const panel = document.getElementById('notifPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleString('id-ID', { 
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function renderNotifications() {
+            const notifList = document.getElementById('notifList');
+            const unreadCountElement = document.getElementById('unreadCount');
+            
+            if (notifications.length === 0) {
+                notifList.innerHTML = `
+                    <div style="padding: 24px 16px; text-align: center; color: #6b7280;">
+                        Tidak ada notifikasi
+                    </div>
+                `;
+            } else {
+                notifList.innerHTML = notifications.map(notif => `
+                    <div class="notification-item ${notif.read ? '' : 'unread'}">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div style="flex: 1;">
+                                <div class="notification-subject">${notif.subject}</div>
+                                <div class="notification-message">${notif.message}</div>
+                                <div class="notification-time">${formatTime(notif.created_at)}</div>
+                            </div>
+                            ${!notif.read ? `
+                                <button onclick="markAsRead('${notif.id}')" class="mark-read-btn">
+                                    <i class="fa-solid fa-check"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            unreadCountElement.textContent = unreadCount;
+            unreadCountElement.style.display = unreadCount > 0 ? 'flex' : 'none';
+        }
+
+        function markAsRead(notifId) {
+            fetch(`/notifications/${notifId}/mark-as-read`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    const notif = notifications.find(n => n.id === notifId);
+                    if (notif && !notif.read) {
+                        notif.read = true;
+                        unreadCount--;
+                        renderNotifications();
+                    }
+                }
+            });
+        }
+
+        function markAllAsRead() {
+            fetch('/notifications/mark-all-as-read', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    notifications.forEach(notif => {
+                        if (!notif.read) {
+                            notif.read = true;
+                        }
+                    });
+                    unreadCount = 0;
+                    renderNotifications();
+                }
+            });
+        }
+
+        function pollNotifications() {
+            fetch('/notifications')
+                .then(response => response.json())
+                .then(data => {
+                    notifications = data.notifications;
+                    unreadCount = data.unread_count;
+                    renderNotifications();
+                });
+        }
+
+        // Mulai polling setiap 30 detik
+        pollNotifications();
+        setInterval(pollNotifications, 30000);
+
+        // Tutup panel notifikasi ketika klik di luar
+        document.addEventListener('click', (event) => {
+            const panel = document.getElementById('notifPanel');
+            const button = document.getElementById('notifButton');
+            if (panel && button && !panel.contains(event.target) && !button.contains(event.target)) {
+                panel.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
