@@ -7,7 +7,7 @@
     <h1 style="text-align:center; margin-top: 30px; font-size:2.5rem; color:#1e40af; font-weight:700;">
         History & Status Laporan
     </h1>
-    <div class="container mt-4">
+    <div class="container-fluid mt-4">
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
@@ -15,7 +15,7 @@
             <div class="card-body">
                 @if($reports->count())
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover">
+                    <table class="table table-bordered table-hover" style="width: 100%; min-width: 900px;">
                         <thead class="table-light">
                             <tr>
                                 <th>No</th>
@@ -51,4 +51,4 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection
