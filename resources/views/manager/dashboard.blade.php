@@ -49,7 +49,7 @@
         <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl shadow-lg">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-white font-medium">Sedang Digunakan</h3>
+                    <h3 class="text-white font-medium">Digunakan</h3>
                     <div class="p-2 bg-yellow-400 bg-opacity-30 rounded-lg">
                         <i class="fa-solid fa-sync text-white text-xl"></i>
                     </div>
@@ -67,7 +67,7 @@
         <div class="bg-gradient-to-br from-red-500 to-red-600 rounded-xl shadow-lg">
             <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-white font-medium">Rusak</h3>
+                    <h3 class="text-white font-medium">Laporan</h3>
                     <div class="p-2 bg-red-400 bg-opacity-30 rounded-lg">
                         <i class="fa-solid fa-exclamation-triangle text-white text-xl"></i>
                     </div>
@@ -122,7 +122,7 @@
         <!-- Low Stock Equipment -->
         <div class="bg-white rounded-xl shadow-lg">
             <div class="p-6 border-b border-gray-100">
-                <h5 class="text-xl font-semibold text-gray-800">Peringatan Stok Rendah</h5>
+                <h5 class="text-xl font-semibold text-gray-800">List Peralatan</h5>
             </div>
             <div class="p-6">
                 <div class="overflow-x-auto">

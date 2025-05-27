@@ -105,7 +105,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-uppercase mb-1">Sedang Digunakan</h6>
+                            <h6 class="text-uppercase mb-1">Digunakan</h6>
                             <h2 class="mb-0">{{ $statistics['sedang_digunakan'] ?? 0 }}</h2>
                         </div>
                         <div class="icon">
@@ -121,7 +121,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h6 class="text-uppercase mb-1">Rusak</h6>
+                            <h6 class="text-uppercase mb-1">Laporan</h6>
                             <h2 class="mb-0">{{ $statistics['rusak'] ?? 0 }}</h2>
                         </div>
                         <div class="icon">
