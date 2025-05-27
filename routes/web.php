@@ -36,7 +36,7 @@ Route::middleware(['auth', 'role:manager'])->get('/dashboard-manager', function 
         'total' => Equipment::count(),
         'tersedia' => Equipment::where('status', 'tersedia')->count(),
         'sedang_digunakan' => Equipment::where('status', 'sedang_digunakan')->count(),
-        'rusak' => Equipment::where('status', 'rusak')->count(),
+        'rusak' => DamageReport::where('status', 'diajukan')->count(),
     ];
 
     $recentEquipment = Equipment::latest()->take(5)->get();
@@ -126,6 +126,10 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/manager/equipment/{equipment}/edit', [App\Http\Controllers\Manager\EquipmentController::class, 'edit'])->name('equipment.edit');
     Route::put('/manager/equipment/{equipment}', [App\Http\Controllers\Manager\EquipmentController::class, 'update'])->name('equipment.update');
     Route::delete('/manager/equipment/{equipment}', [App\Http\Controllers\Manager\EquipmentController::class, 'destroy'])->name('equipment.destroy');
+
+    // Damage report routes
+    Route::get('/manager/reports', [App\Http\Controllers\Manager\DamageReportController::class, 'index'])->name('manager.reports.index');
+    Route::put('/manager/reports/{report}/update-status', [App\Http\Controllers\Manager\DamageReportController::class, 'updateStatus'])->name('manager.reports.update-status');
 });
 
 // Notification Routes

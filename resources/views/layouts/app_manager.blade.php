@@ -68,10 +68,15 @@
                     </div>
                 </div>
 
-                <a href="#" 
-                   class="flex items-center space-x-4 px-4 py-3 rounded-lg mb-2 hover:bg-blue-700 transition-colors">
-                    <i class="fa-solid fa-boxes text-xl"></i>
-                    <span class="font-medium">Pelaporan</span>
+                <a href="{{ route('manager.reports.index') }}" 
+                   class="flex items-center space-x-4 px-4 py-3 rounded-lg mb-2 {{ Request::routeIs('manager.reports.*') ? 'bg-blue-600' : 'hover:bg-blue-700' }} transition-colors">
+                    <i class="fa-solid fa-clipboard-list text-xl"></i>
+                    <span class="font-medium">Laporan Kerusakan</span>
+                    @if($reportCount = \App\Models\DamageReport::where('status', 'diajukan')->count())
+                        <span class="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                            {{ $reportCount }}
+                        </span>
+                    @endif
                 </a>
 
                 <a href="{{ route('manager.email') }}" 
