@@ -85,26 +85,33 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <div class="flex space-x-2">
+                                <div class="flex space-x-3">
+                                    <!-- Edit Button -->
                                     <a href="{{ route('equipment.edit', $equipment->id) }}" 
-                                       class="text-yellow-600 hover:text-yellow-800"
-                                       title="Edit">
-                                        <i class="fa-solid fa-edit"></i>
+                                       class="inline-flex items-center px-3 py-1.5 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition-colors">
+                                        <i class="fa-solid fa-edit mr-1.5"></i>
+                                        Edit
                                     </a>
+                                    
+                                    <!-- Delete Button -->
                                     <button type="button" 
-                                            class="text-red-600 hover:text-red-800"
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#deleteModal{{ $equipment->id }}"
-                                            title="Hapus">
-                                        <i class="fa-solid fa-trash"></i>
+                                            onclick="confirmDelete('{{ $equipment->id }}')"
+                                            class="inline-flex items-center px-3 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors">
+                                        <i class="fa-solid fa-trash mr-1.5"></i>
+                                        Hapus
                                     </button>
+
+                                    <!-- Hidden Delete Form -->
+                                    <form id="delete-form-{{ $equipment->id }}" 
+                                          action="{{ route('equipment.destroy', $equipment->id) }}" 
+                                          method="POST" 
+                                          class="hidden">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
                                 </div>
                             </td>
                         </tr>
-
-                                </div>
-                            </div>
-                        </div>
                         @empty
                         <tr>
                             <td colspan="6" class="px-6 py-4 text-center text-gray-500">
@@ -118,4 +125,51 @@
         </div>
     </div>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center">
+    <div class="bg-white rounded-lg shadow-xl p-6 max-w-sm mx-auto">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">Konfirmasi Hapus</h3>
+        <p class="text-gray-600 mb-6">Apakah Anda yakin ingin menghapus peralatan ini? Tindakan ini tidak dapat dibatalkan.</p>
+        <div class="flex justify-end space-x-3">
+            <button onclick="closeDeleteModal()" 
+                    class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg transition-colors">
+                Batal
+            </button>
+            <button onclick="proceedDelete()" 
+                    class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors">
+                Ya, Hapus
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+let deleteId = null;
+
+function confirmDelete(id) {
+    deleteId = id;
+    document.getElementById('deleteModal').classList.remove('hidden');
+    document.getElementById('deleteModal').classList.add('flex');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('flex');
+    document.getElementById('deleteModal').classList.add('hidden');
+    deleteId = null;
+}
+
+function proceedDelete() {
+    if (deleteId) {
+        document.getElementById(`delete-form-${deleteId}`).submit();
+    }
+}
+
+// Close modal when clicking outside
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeDeleteModal();
+    }
+});
+</script>
 @endsection 

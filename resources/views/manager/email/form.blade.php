@@ -24,6 +24,17 @@
                             {{ session('error') }}
                         </div>
                     @endif
+                    <div>
+                        <label for="template" class="block text-sm font-medium text-gray-700 mb-2">Template</label>
+                        <select class="w-full px-4 py-2.5 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-sm hover:border-gray-400 transition-colors" 
+                                id="template" 
+                                onchange="loadTemplate(this.value)">
+                            <option value="">Pilih Template</option>
+                            <option value="laporan_harian">Laporan Harian</option>
+                            <option value="pemberitahuan">Pemberitahuan</option>
+                            <option value="pengumuman">Pengumuman</option>
+                        </select>
+                    </div>
 
                     <div>
                         <label for="to" class="block text-sm font-medium text-gray-700 mb-2">
@@ -78,18 +89,6 @@
                         @error('message')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
-                    </div>
-
-                    <div>
-                        <label for="template" class="block text-sm font-medium text-gray-700 mb-2">Template</label>
-                        <select class="w-full px-4 py-2.5 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-sm hover:border-gray-400 transition-colors" 
-                                id="template" 
-                                onchange="loadTemplate(this.value)">
-                            <option value="">Pilih Template</option>
-                            <option value="laporan_harian">Laporan Harian</option>
-                            <option value="pemberitahuan">Pemberitahuan</option>
-                            <option value="pengumuman">Pengumuman</option>
-                        </select>
                     </div>
 
                     <div class="flex justify-end space-x-3 pt-4">
