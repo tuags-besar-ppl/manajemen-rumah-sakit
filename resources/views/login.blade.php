@@ -4,145 +4,79 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-            background: #f0f2f5;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .login-card {
-            display: flex;
-            width: 68vw;   /* dikurangi dari 90vw jadi 80vw */
-            height: 68vh;  /* dikurangi dari 90vh jadi 80vh */
-            max-width: 1200px;
-            max-height: 700px;
-            box-shadow: 0 4px 25px rgb(0 0 0 / 0.15);
-            border-radius: 15px;
-            overflow: hidden;
-            background: white;
-        }
-        .login-image {
-            flex: 1.2;
-            background: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .login-image img {
-            width: 95%;
-            height: auto;
-            object-fit: contain;
-            user-select: none;
-        }
-        .login-form {
-            flex: 0.8;
-            background: linear-gradient(135deg,rgb(0, 115, 209),rgb(78, 175, 254));
-            color: white;
-            padding: 50px 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            border-top-right-radius: 15px;
-            border-bottom-right-radius: 15px;
-        }
-        .login-form h2 {
-            font-weight: 600;
-            margin-bottom: 45px;
-            text-align: center;
-            letter-spacing: 3px;
-            font-size: 1.8rem;
-        }
-        .form-control {
-            border-radius: 30px;
-            height: 45px;
-            border: none;
-            padding-left: 20px;
-            font-size: 15px;
-        }
-        .form-control:focus {
-            box-shadow: none;
-            border: none;
-        }
-        .btn-submit {
-            background: #4caf50;
-            border: none;
-            border-radius: 30px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            height: 45px;
-            margin-top: 25px;
-            transition: background 0.3s ease;
-            font-size: 1rem;
-        }
-        .btn-submit:hover {
-            background: #43a047;
-        }
-        .input-group {
-            margin-bottom: 18px;
-        }
-        .alert-danger {
-            border-radius: 10px;
-            font-size: 14px;
-        }
-        @media (max-width: 768px) {
-            .login-card {
-                flex-direction: column;
-                height: auto;
-                width: 95vw;
-            }
-            .login-image, .login-form {
-                flex: none;
-                border-radius: 0;
-                padding: 30px 20px;
-            }
-            .login-form {
-                border-radius: 0 0 15px 15px;
-                background: #2196f3;
-            }
-            .login-form h2 {
-                font-size: 1.5rem;
-                margin-bottom: 30px;
-            }
-        }
-    </style>
+    <title>Login - Sistem Manajemen Rumah Sakit</title>
+    @vite('resources/css/app.css')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
-    <div class="login-card" role="main">
-        <div class="login-image">
-            <img src="{{ asset('uploads/login.png') }}" alt="Login Illustration" draggable="false" />
+<body class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div class="w-full max-w-6xl bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col md:flex-row">
+        <!-- Image Section -->
+        <div class="w-full md:w-1/2 bg-white p-8 flex items-center justify-center">
+            <img src="{{ asset('uploads/login.png') }}" 
+                 alt="Login Illustration" 
+                 class="w-full max-w-md object-contain"
+                 draggable="false" />
         </div>
-        <div class="login-form">
-        <h1 style="text-align: center; font-size: 3rem; margin-bottom: 30px;">Selamat Datang</h1>
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
-                <div class="input-group">
-                    <input type="email" name="email" placeholder="Username" class="form-control" required autofocus />
-                </div>
-                <div class="input-group">
-                    <input type="password" name="password" placeholder="••••••••" class="form-control" required />
-                </div>
-                <button type="submit" class="btn btn-submit w-100">SUBMIT</button>
-            </form>
 
-            @if ($errors->any())
-                <div class="alert alert-danger mt-3">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+        <!-- Form Section -->
+        <div class="w-full md:w-1/2 bg-gradient-to-br from-blue-600 to-blue-400 p-8 md:p-12">
+            <div class="max-w-md mx-auto">
+                <h1 class="text-4xl font-bold text-white text-center mb-8">
+                    Selamat Datang
+                </h1>
+
+                <form method="POST" action="{{ route('login') }}" class="space-y-6">
+                    @csrf
+                    
+                    <!-- Email Field -->
+                    <div>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                            <input type="email" 
+                                   name="email" 
+                                   placeholder="Email" 
+                                   class="w-full pl-12 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all"
+                                   required 
+                                   autofocus />
+                        </div>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            <input type="password" 
+                                   name="password" 
+                                   placeholder="Password" 
+                                   class="w-full pl-12 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all"
+                                   required />
+                        </div>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" 
+                            class="w-full bg-white text-blue-600 py-3 px-6 rounded-lg font-semibold hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Masuk
+                    </button>
+
+                    <!-- Error Messages -->
+                    @if ($errors->any())
+                        <div class="mt-4 bg-red-100 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                            <ul class="list-disc list-inside">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                </form>
+            </div>
         </div>
     </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
