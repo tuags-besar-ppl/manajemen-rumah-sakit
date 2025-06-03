@@ -54,7 +54,7 @@ Route::middleware(['auth', 'role:logistik'])->get('/dashboard-logistik', functio
         'rusak' => Equipment::where('status', 'rusak')->count(),
     ];
 
-    $recentEquipment = Equipment::latest()->take(5)->get();
+    $recentEquipment = Equipment::latest()->take(50)->get();
     $lowStockEquipments = Equipment::where('quantity', '<=', 10)->get();
 
     return view('logistik.dashboard', compact('statistics', 'recentEquipment', 'lowStockEquipments'));
@@ -183,13 +183,14 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/manager/email', [App\Http\Controllers\Manager\EmailController::class, 'index'])->name('manager.email');
     Route::post('/manager/email/send', [App\Http\Controllers\Manager\EmailController::class, 'send'])->name('manager.email.send');
     
-    // Equipment routes for manager
-    Route::get('/manager/equipment', [App\Http\Controllers\Manager\EquipmentController::class, 'index'])->name('equipment.index');
-    Route::get('/manager/equipment/create', [App\Http\Controllers\Manager\EquipmentController::class, 'create'])->name('equipment.create');
-    Route::post('/manager/equipment', [App\Http\Controllers\Manager\EquipmentController::class, 'store'])->name('equipment.store');
-    Route::get('/manager/equipment/{equipment}/edit', [App\Http\Controllers\Manager\EquipmentController::class, 'edit'])->name('equipment.edit');
-    Route::put('/manager/equipment/{equipment}', [App\Http\Controllers\Manager\EquipmentController::class, 'update'])->name('equipment.update');
-    Route::delete('/manager/equipment/{equipment}', [App\Http\Controllers\Manager\EquipmentController::class, 'destroy'])->name('equipment.destroy');
+       // Equipment routes for manager
+    Route::get('/manager/equipment', [App\Http\Controllers\Manager\EquipmentController::class, 'index'])->name('manager.equipment.index');
+    Route::get('/manager/equipment/create', [App\Http\Controllers\Manager\EquipmentController::class, 'create'])->name('manager.equipment.create');
+    Route::post('/manager/equipment', [App\Http\Controllers\Manager\EquipmentController::class, 'store'])->name('manager.equipment.store');
+    Route::get('/manager/equipment/{equipment}/edit', [App\Http\Controllers\Manager\EquipmentController::class, 'edit'])->name('manager.equipment.edit');
+    Route::put('/manager/equipment/{equipment}', [App\Http\Controllers\Manager\EquipmentController::class, 'update'])->name('manager.equipment.update');
+    Route::delete('/manager/equipment/{equipment}', [App\Http\Controllers\Manager\EquipmentController::class, 'destroy'])->name('manager.equipment.destroy');
+
 
     // Damage report routes
     Route::get('/manager/reports', [App\Http\Controllers\Manager\DamageReportController::class, 'index'])->name('manager.reports.index');
@@ -202,3 +203,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
     Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
 });
+
+// logistik
+use App\Http\Controllers\Logistik\EquipmentController;
+
+Route::get('/logistik/equipment', [EquipmentController::class, 'index'])->name('equipment.index');
+Route::get('/logistik/equipment/create', [EquipmentController::class, 'create'])->name('equipment.create');
+Route::post('/logistik/equipment', [EquipmentController::class, 'store'])->name('equipment.store');
+Route::get('/logistik/equipment/{equipment}/edit', [EquipmentController::class, 'edit'])->name('equipment.edit');
+Route::put('/logistik/equipment/{equipment}', [EquipmentController::class, 'update'])->name('equipment.update');
+Route::delete('/logistik/equipment/{equipment}', [EquipmentController::class, 'destroy'])->name('equipment.destroy');

@@ -55,12 +55,12 @@
                     </div>
                     
                     <div class="pl-4 mt-2 hidden" id="equipmentSubmenu">
-                        <a href="{{ route('equipment.index') }}" 
+                        <a href="{{ route('manager.equipment.index') }}" 
                            class="flex items-center space-x-4 px-4 py-2 rounded-lg mb-1 {{ Request::is('equipment') ? 'bg-blue-600' : 'hover:bg-blue-700' }} transition-colors">
                             <i class="fa-solid fa-list text-sm"></i>
                             <span class="font-medium">Daftar Peralatan</span>
                         </a>
-                        <a href="{{ route('equipment.create') }}" 
+                        <a href="{{ route('manager.equipment.create') }}" 
                            class="flex items-center space-x-4 px-4 py-2 rounded-lg {{ Request::is('equipment/create') ? 'bg-blue-600' : 'hover:bg-blue-700' }} transition-colors">
                             <i class="fa-solid fa-plus text-sm"></i>
                             <span class="font-medium">Tambah Peralatan</span>

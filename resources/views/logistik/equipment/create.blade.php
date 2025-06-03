@@ -9,7 +9,7 @@
 
     <div class="bg-white rounded-xl shadow-md overflow-hidden">
         <div class="p-6">
-            <form action="{{ route('manager.equipment.store') }}" method="POST" class="space-y-6">
+            <form action="{{ route('equipment.store') }}" method="POST" class="space-y-6">
                 @csrf
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -109,7 +109,7 @@
                 </div>
 
                 <div class="flex justify-end space-x-4 mt-6">
-                    <a href="{{ route('manager.equipment.index') }}" 
+                    <a href="{{ route('equipment.index') }}" 
                        class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition-colors shadow-sm">
                         <i class="fa-solid fa-arrow-left mr-2"></i>
                         Kembali

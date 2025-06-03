@@ -11,7 +11,7 @@ class EquipmentController extends Controller
     public function index()
     {
         $equipments = Equipment::all();
-        return view('logistik.index', compact('equipments'));
+        return view('logistik.dashboard', compact('equipments'));
     }
 
     public function create()
@@ -27,7 +27,7 @@ class EquipmentController extends Controller
             'Ruang Farmasi',
         ];
         $statuses = ['Tersedia', 'Sedang Digunakan', 'Rusak'];
-        return view('logistik.create', compact('locations', 'statuses'));
+        return view('logistik.equipment.create', compact('locations', 'statuses'));
     }
 
     public function store(Request $request)
@@ -57,7 +57,7 @@ class EquipmentController extends Controller
             'Ruang Farmasi',
         ];
         $statuses = ['Tersedia', 'Sedang Digunakan', 'Rusak'];
-        return view('logistik.edit', compact('equipment', 'locations', 'statuses'));
+        return view('logistik.equipment.edit', compact('equipment', 'locations', 'statuses'));
     }
 
     public function update(Request $request, $id)

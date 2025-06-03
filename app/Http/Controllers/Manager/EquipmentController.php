@@ -30,7 +30,7 @@ class EquipmentController extends Controller
         ]);
 
         Equipment::create($validated);
-        return redirect()->route('equipment.index')->with('success', 'Peralatan berhasil ditambahkan.');
+        return redirect()->route('manager.equipment.index')->with('success', 'Peralatan berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -51,13 +51,13 @@ class EquipmentController extends Controller
 
         $equipment = Equipment::findOrFail($id);
         $equipment->update($validated);
-        return redirect()->route('equipment.index')->with('success', 'Peralatan berhasil diperbarui.');
+        return redirect()->route('manager.equipment.index')->with('success', 'Peralatan berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
         $equipment = Equipment::findOrFail($id);
         $equipment->delete();
-        return redirect()->route('equipment.index')->with('success', 'Peralatan berhasil dihapus.');
+        return redirect()->route('manager.equipment.index')->with('success', 'Peralatan berhasil dihapus.');
     }
 } 

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app_logistik')
 
 @section('content')
 <div class="container-fluid">
@@ -140,10 +140,7 @@
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex justify-content-between align-items-center">
                     <h6 class="m-0 font-weight-bold text-primary">Peralatan Terbaru</h6>
-                    <a href="{{ route('equipment.index') }}" class="btn btn-sm btn-primary">
-                        <i class="fas fa-list me-1"></i>
-                        Lihat Semua
-                    </a>
+             
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
