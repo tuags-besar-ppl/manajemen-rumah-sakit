@@ -45,7 +45,7 @@ Route::middleware(['auth', 'role:manager'])->get('/dashboard-manager', function 
     return view('manager.dashboard', compact('statistics', 'recentEquipment', 'lowStockEquipments'));
 })->name('dashboard-manager');
 
-
+// Rute untuk dashboard Logistik
 Route::middleware(['auth', 'role:logistik'])->get('/dashboard-logistik', function () {
     $statistics = [
         'total' => Equipment::count(),
@@ -71,45 +71,109 @@ Route::middleware(['auth', 'role:perawat'])->get('/dashboard-perawat', function 
     return view('perawat.dashboard', compact('statistics', 'recentEquipment'));
 })->name('dashboard-perawat');
 
-Route::middleware(['auth', 'role:perawat'])->get('/pelaporan-alat', function () {
-    return view('perawat.pelaporan-alat');
-})->name('pelaporan-alat');
+Route::middleware(['auth', 'role:perawat'])->group(function () {
+    // Pelaporan Alat Routes
+    Route::get('/pelaporan-alat', function () {
+        return view('perawat.pelaporan-alat');
+    })->name('pelaporan-alat');
 
 Route::middleware(['auth', 'role:perawat'])->get('/pinjam-alat', function () {
     return view('perawat.pinjam-alat');
 })->name('pinjam-alat');
 
-Route::middleware(['auth', 'role:perawat'])->get('/lapor-kerusakan-alat', function () {
+Route::get('/lapor-kerusakan-alat', function () {
     $equipments = \App\Models\Equipment::all();
     return view('perawat.lapor-kerusakan-alat', compact('equipments'));
-})->name('lapor-kerusakan-alat');
+})->name('perawat.lapor-kerusakan.create');
 
 Route::middleware(['auth', 'role:perawat'])->get('/history-status-report', function () {
     $reports = DamageReport::where('user_id', auth()->id())->latest()->get();
     return view('perawat.history-status-report', compact('reports'));
 })->name('history-status-report');
-// Route untuk menyimpan laporan kerusakan alat
-Route::middleware(['auth', 'role:perawat'])->post('/lapor-kerusakan-alat', function () {
+
+    Route::post('/lapor-kerusakan-alat', function () {
+        $validated = request()->validate([
+            'alat_id' => 'required',
+            'deskripsi_kerusakan' => 'required|string',
+            'tanggal_kerusakan' => 'required|date',
+            'lokasi' => 'required|string',
+            'prioritas' => 'required|in:rendah,sedang,tinggi,kritis'
+        ]);
+
+        \App\Models\DamageReport::create([
+            'alat_id' => $validated['alat_id'],
+            'user_id' => auth()->id(),
+            'deskripsi_kerusakan' => $validated['deskripsi_kerusakan'],
+            'tanggal_kerusakan' => $validated['tanggal_kerusakan'],
+            'lokasi' => $validated['lokasi'],
+            'prioritas' => $validated['prioritas'],
+            'status' => 'diajukan'
+        ]);
+
+        return redirect()->route('history-status-report')->with('success', 'Laporan kerusakan berhasil disimpan');
+    })->name('perawat.lapor-kerusakan.store');
+
+    Route::get('/history-status-report', function () {
+        $reports = \App\Models\DamageReport::where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('perawat.history-status-report', compact('reports'));
+    })->name('history-status-report');
+});
+
+Route::middleware(['auth', 'role:perawat'])->get('/pinjam-alat', function () {
+    return view('perawat.pinjam-alat');
+})->name('pinjam-alat');
+
+Route::middleware(['auth', 'role:perawat'])->get('/peminjaman-alat', function () {
+    $daftar_alat = \App\Models\Equipment::where('status', 'tersedia')->get();
+    return view('perawat.peminjaman-alat', compact('daftar_alat'));
+})->name('peminjaman-alat');
+
+Route::middleware(['auth', 'role:perawat'])->get('/history-status-request', function () {
+    $requests = \App\Models\EquipmentRequest::where('user_id', auth()->id())
+        ->orderBy('created_at', 'desc')
+        ->get();
+    return view('perawat.history-status-request', compact('requests'));
+})->name('perawat.history-status-request');
+
+// Route untuk membatalkan permintaan peminjaman alat
+Route::middleware(['auth', 'role:perawat'])->post('/equipment-requests/{request}/cancel', function($request) {
+    $equipmentRequest = \App\Models\EquipmentRequest::findOrFail($request);
+    
+    // Pastikan user hanya bisa membatalkan permintaannya sendiri
+    if ($equipmentRequest->user_id !== auth()->id()) {
+        return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk membatalkan permintaan ini');
+    }
+
+    // Pastikan hanya bisa membatalkan permintaan yang masih pending
+    if ($equipmentRequest->status !== 'pending') {
+        return redirect()->back()->with('error', 'Hanya permintaan dengan status pending yang dapat dibatalkan');
+    }
+
+    $equipmentRequest->update(['status' => 'cancelled']);
+    return redirect()->route('perawat.history-status-request')->with('success', 'Permintaan peminjaman alat berhasil dibatalkan');
+})->name('perawat.equipment-requests.cancel');
+
+// Route untuk menyimpan peminjaman alat
+Route::middleware(['auth', 'role:perawat'])->post('/peminjaman-alat', function () {
     $validated = request()->validate([
         'alat_id' => 'required',
-        'deskripsi_kerusakan' => 'required|string',
-        'tanggal_kerusakan' => 'required|date',
-        'lokasi' => 'required|string',
-        'prioritas' => 'required|in:rendah,sedang,tinggi,kritis'
+        'alasan' => 'required|string',
+        'tanggal_permintaan' => 'required|date'
     ]);
 
-    // Simpan data ke tabel damage_reports
-    DamageReport::create([
-        'alat_id' => $validated['alat_id'],
+    // Simpan data peminjaman ke database
+    \App\Models\EquipmentRequest::create([
         'user_id' => auth()->id(),
-        'deskripsi_kerusakan' => $validated['deskripsi_kerusakan'],
-        'tanggal_kerusakan' => $validated['tanggal_kerusakan'],
-        'lokasi' => $validated['lokasi'],
-        'prioritas' => $validated['prioritas'],
-        'status' => 'diajukan'
+        'alat_id' => $validated['alat_id'],
+        'alasan' => $validated['alasan'],
+        'tanggal_permintaan' => $validated['tanggal_permintaan'],
+        'status' => 'pending'
     ]);
-    return redirect()->route('lapor-kerusakan-alat')->with('success', 'Laporan kerusakan berhasil disimpan');
-})->name('perawat.lapor-kerusakan.store');
+
+    return redirect()->route('perawat.history-status-request')->with('success', 'Peminjaman alat berhasil diajukan');
+})->name('perawat.peminjaman-alat.store');
 
 Route::middleware(['auth', 'role:logistik'])->resource('equipment', App\Http\Controllers\Logistik\EquipmentController::class);
 Route::middleware(['auth', 'role:manager'])->resource('equipment', App\Http\Controllers\Logistik\EquipmentController::class);

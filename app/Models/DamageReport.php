@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class DamageReport extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'alat_id',
         'user_id',
@@ -19,11 +22,11 @@ class DamageReport extends Model
 
     public function equipment()
     {
-        return $this->belongsTo(\App\Models\Equipment::class, 'alat_id');
+        return $this->belongsTo(Equipment::class, 'alat_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 }
