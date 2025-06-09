@@ -75,30 +75,20 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 @php
                                     $statusConfig = [
-                                        'pending' => [
+                                        'diajukan' => [
                                             'class' => 'yellow',
                                             'icon' => 'clock',
                                             'text' => 'Menunggu Persetujuan'
                                         ],
-                                        'approved' => [
+                                        'disetujui' => [
                                             'class' => 'green',
                                             'icon' => 'check-circle',
                                             'text' => 'Disetujui'
                                         ],
-                                        'rejected' => [
+                                        'ditolak' => [
                                             'class' => 'red',
                                             'icon' => 'times-circle',
                                             'text' => 'Ditolak'
-                                        ],
-                                        'completed' => [
-                                            'class' => 'blue',
-                                            'icon' => 'check-double',
-                                            'text' => 'Selesai'
-                                        ],
-                                        'cancelled' => [
-                                            'class' => 'gray',
-                                            'icon' => 'ban',
-                                            'text' => 'Dibatalkan'
                                         ]
                                     ];
                                     
@@ -114,7 +104,7 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                @if($request->status === 'pending')
+                                @if($request->status === 'diajukan')
                                     <form action="{{ route('perawat.equipment-requests.cancel', $request->id) }}" 
                                           method="POST" 
                                           class="inline-block"
@@ -126,10 +116,10 @@
                                             Batalkan
                                         </button>
                                     </form>
-                                @elseif($request->status === 'approved')
+                                @elseif($request->status === 'disetujui')
                                     <button type="button" 
                                             class="inline-flex items-center px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
-                                            onclick="alert('Silakan ambil alat di {{ $request->equipment->location }}')">
+                                            onclick="showLocationModal('{{ $request->equipment->location ?? '-' }}')">
                                         <i class="fas fa-info-circle mr-1.5"></i>
                                         Info
                                     </button>
@@ -150,4 +140,28 @@
         </div>
     </div>
 </div>
+
+<!-- Location Modal -->
+<div id="locationModal" class="fixed inset-0 overflow-y-auto h-full w-full hidden flex items-center justify-center z-50">
+    <div class="relative p-5 border w-96 shadow-lg rounded-md bg-white text-center">
+        <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Informasi Pengambilan Alat</h3>
+        <p class="text-sm text-gray-500 mb-6">Silakan ambil alat di <span id="locationText" class="font-semibold text-gray-800"></span></p>
+        <div class="mt-4">
+            <button type="button" id="okButton" class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                OK
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showLocationModal(location) {
+        document.getElementById('locationText').innerText = location;
+        document.getElementById('locationModal').classList.remove('hidden');
+    }
+
+    document.getElementById('okButton').addEventListener('click', function() {
+        document.getElementById('locationModal').classList.add('hidden');
+    });
+</script>
 @endsection 

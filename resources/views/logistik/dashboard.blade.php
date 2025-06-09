@@ -12,9 +12,9 @@
 
     <!-- Modal -->
     <div class="modal fade" id="modalTambahPeralatan" tabindex="-1" aria-labelledby="modalTambahPeralatanLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form action="{{ route('equipment.store') }}" method="POST">
+                <form action="{{ route('logistic.equipment.store') }}" method="POST">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalTambahPeralatanLabel">Tambah Peralatan Baru</h5>
@@ -23,38 +23,55 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="code" class="form-label">Kode</label>
-                            <input type="text" name="code" id="code" class="form-control" required>
+                            <input type="text" name="code" id="code" class="form-control @error('code') is-invalid @enderror" value="{{ old('code') }}" required>
+                            @error('code')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama</label>
-                            <input type="text" name="name" id="name" class="form-control" required>
+                            <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label for="location" class="form-label">Lokasi</label>
-                            <select name="location" id="location" class="form-control" required>
+                            <select name="location" id="location" class="form-control @error('location') is-invalid @enderror" required>
                                 <option value="">-- Pilih Lokasi --</option>
-                                <option value="Laboratorium A">Laboratorium A</option>
-                                <option value="Laboratorium B">Laboratorium B</option>
-                                <option value="Laboratorium C">Laboratorium C</option>
-                                <option value="Ruang IGD">Ruang IGD</option>
-                                <option value="Ruang Rawat Inap">Ruang Rawat Inap</option>
-                                <option value="Ruang Operasi">Ruang Operasi</option>
-                                <option value="Ruang Radiologi">Ruang Radiologi</option>
-                                <option value="Ruang Farmasi">Ruang Farmasi</option>
+                                <option value="Laboratorium A" {{ old('location') == 'Laboratorium A' ? 'selected' : '' }}>Laboratorium A</option>
+                                <option value="Laboratorium B" {{ old('location') == 'Laboratorium B' ? 'selected' : '' }}>Laboratorium B</option>
+                                <option value="Laboratorium C" {{ old('location') == 'Laboratorium C' ? 'selected' : '' }}>Laboratorium C</option>
+                                <option value="Ruang IGD" {{ old('location') == 'Ruang IGD' ? 'selected' : '' }}>Ruang IGD</option>
+                                <option value="Ruang Rawat Inap" {{ old('location') == 'Ruang Rawat Inap' ? 'selected' : '' }}>Ruang Rawat Inap</option>
+                                <option value="Ruang Operasi" {{ old('location') == 'Ruang Operasi' ? 'selected' : '' }}>Ruang Operasi</option>
+                                <option value="Ruang Radiologi" {{ old('location') == 'Ruang Radiologi' ? 'selected' : '' }}>Ruang Radiologi</option>
+                                <option value="Ruang Farmasi" {{ old('location') == 'Ruang Farmasi' ? 'selected' : '' }}>Ruang Farmasi</option>
                             </select>
+                            @error('location')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
-                            <select name="status" id="status" class="form-control" required>
+                            <select name="status" id="status" class="form-control @error('status') is-invalid @enderror" required>
                                 <option value="">-- Pilih Status --</option>
-                                <option value="tersedia">Tersedia</option>
-                                <option value="sedang_digunakan">Sedang Digunakan</option>
-                                <option value="rusak">Rusak</option>
+                                <option value="tersedia" {{ old('status') == 'tersedia' ? 'selected' : '' }}>Tersedia</option>
+                                <option value="sedang_digunakan" {{ old('status') == 'sedang_digunakan' ? 'selected' : '' }}>Sedang Digunakan</option>
+                                <option value="rusak" {{ old('status') == 'rusak' ? 'selected' : '' }}>Rusak</option>
+                                <option value="perbaikan" {{ old('status') == 'perbaikan' ? 'selected' : '' }}>Perbaikan</option>
+                                <option value="hilang" {{ old('status') == 'hilang' ? 'selected' : '' }}>Hilang</option>
                             </select>
+                            @error('status')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label for="quantity" class="form-label">Stok</label>
-                            <input type="number" name="quantity" id="quantity" class="form-control" min="0" required>
+                            <input type="number" name="quantity" id="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity', 1) }}" min="1" required>
+                            @error('quantity')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -70,64 +87,40 @@
     <div class="row mb-4">
         <div class="col-xl-3 col-md-6">
             <div class="card bg-primary text-white h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-uppercase mb-1">Total Peralatan</h6>
-                            <h2 class="mb-0">{{ $statistics['total'] ?? 0 }}</h2>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-hospital-alt fa-2x opacity-75"></i>
-                        </div>
-                    </div>
+                <div class="card-body d-flex justify-content-between align-items-center flex-column py-4" style="height: 100%; position: relative;">
+                    <h6 class="text-uppercase mb-1">Total Peralatan</h6>
+                    <h2 class="mb-0" style="font-size: 2.5rem;">{{ $statistics['total'] ?? 0 }}</h2>
+                    <i class="fas fa-hospital-alt" style="position: absolute; bottom: 10px; right: 10px; font-size: 3rem; opacity: 0.5;"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-xl-3 col-md-6">
             <div class="card bg-success text-white h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-uppercase mb-1">Tersedia</h6>
-                            <h2 class="mb-0">{{ $statistics['tersedia'] ?? 0 }}</h2>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-check-circle fa-2x opacity-75"></i>
-                        </div>
-                    </div>
+                <div class="card-body d-flex justify-content-between align-items-center flex-column py-4" style="height: 100%; position: relative;">
+                    <h6 class="text-uppercase mb-1">Tersedia</h6>
+                    <h2 class="mb-0" style="font-size: 2.5rem;">{{ $statistics['tersedia'] ?? 0 }}</h2>
+                    <i class="fas fa-check-circle" style="position: absolute; bottom: 10px; right: 10px; font-size: 3rem; opacity: 0.5;"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-xl-3 col-md-6">
             <div class="card bg-info text-white h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-uppercase mb-1">Digunakan</h6>
-                            <h2 class="mb-0">{{ $statistics['sedang_digunakan'] ?? 0 }}</h2>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-sync fa-2x opacity-75"></i>
-                        </div>
-                    </div>
+                <div class="card-body d-flex justify-content-between align-items-center flex-column py-4" style="height: 100%; position: relative;">
+                    <h6 class="text-uppercase mb-1">Digunakan</h6>
+                    <h2 class="mb-0" style="font-size: 2.5rem;">{{ $statistics['sedang_digunakan'] ?? 0 }}</h2>
+                    <i class="fas fa-sync" style="position: absolute; bottom: 10px; right: 10px; font-size: 3rem; opacity: 0.5;"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-xl-3 col-md-6">
             <div class="card bg-danger text-white h-100">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-uppercase mb-1">Laporan</h6>
-                            <h2 class="mb-0">{{ $statistics['rusak'] ?? 0 }}</h2>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-exclamation-triangle fa-2x opacity-75"></i>
-                        </div>
-                    </div>
+                <div class="card-body d-flex justify-content-between align-items-center flex-column py-4" style="height: 100%; position: relative;">
+                    <h6 class="text-uppercase mb-1">Laporan</h6>
+                    <h2 class="mb-0" style="font-size: 2.5rem;">{{ $statistics['rusak'] ?? 0 }}</h2>
+                    <i class="fas fa-exclamation-triangle" style="position: absolute; bottom: 10px; right: 10px; font-size: 3rem; opacity: 0.5;"></i>
                 </div>
             </div>
         </div>
@@ -140,14 +133,13 @@
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex justify-content-between align-items-center">
                     <h6 class="m-0 font-weight-bold text-primary">Peralatan Terbaru</h6>
-             
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
                         @if(session('success'))
                             <div class="alert alert-success">{{ session('success') }}</div>
                         @endif
-                        <table class="table table-hover mb-0">
+                        <table class="table table-bordered table-hover table-light mb-0">
                             <thead class="bg-light">
                                 <tr>
                                     <th>Kode</th>
@@ -172,19 +164,19 @@
                                     <td>
                                         @switch($item->status)
                                             @case('tersedia')
-                                                <span class="badge bg-success">
+                                                <span class="badge bg-success badge-status">
                                                     <i class="fas fa-check-circle me-1"></i>
                                                     Tersedia
                                                 </span>
                                                 @break
                                             @case('sedang_digunakan')
-                                                <span class="badge bg-info">
+                                                <span class="badge bg-info badge-status">
                                                     <i class="fas fa-sync me-1"></i>
                                                     Sedang Digunakan
                                                 </span>
                                                 @break
                                             @case('rusak')
-                                                <span class="badge bg-danger">
+                                                <span class="badge bg-danger badge-status">
                                                     <i class="fas fa-exclamation-triangle me-1"></i>
                                                     Rusak
                                                 </span>
@@ -198,15 +190,15 @@
                                                 <i class="fas fa-exclamation-circle ms-1" data-bs-toggle="tooltip" title="Stok di bawah minimum (10)"></i>
                                             </div>
                                         @else
-                                            <span>{{ $item->quantity }}</span>
+                                            {{ $item->quantity }}
                                         @endif
                                     </td>
                                     <td>
                                         <a href="#" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#detailModal{{ $item->id }}">
                                             <i class="fas fa-eye"></i> Lihat
                                         </a>
-                                        <a href="{{ route('equipment.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                        <form action="{{ route('equipment.destroy', $item->id) }}" method="POST" style="display:inline-block;">
+                                        <a href="{{ route('logistic.equipment.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                        <form action="{{ route('logistic.equipment.destroy', $item->id) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus?')">Hapus</button>
@@ -259,23 +251,27 @@
                 </div>
                 <div class="card-body">
                     @if(count($lowStockEquipments ?? []) > 0)
-                        <ul class="list-group list-group-flush">
+                        <div class="list-group list-group-flush border-0">
                             @foreach($lowStockEquipments ?? [] as $item)
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span>
-                                        <strong>{{ $item->name }}</strong>
-                                        <span class="text-muted">({{ $item->code }})</span>
+                                <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-box-open text-warning me-3" style="font-size: 1.5rem;"></i>
+                                        <div>
+                                            <h6 class="mb-0 font-weight-bold text-gray-800">{{ $item->name }}</h6>
+                                            <span class="text-muted small">Kode: {{ $item->code }}</span>
+                                        </div>
+                                    </div>
+                                    <span class="badge bg-danger rounded-pill px-3 py-2" style="font-size: 0.9rem;">
+                                        Stok: {{ $item->quantity }}
                                     </span>
-                                    <span class="badge bg-danger">
-                                        {{ $item->quantity }}
-                                    </span>
-                                </li>
+                                </div>
                             @endforeach
-                        </ul>
+                        </div>
                     @else
-                        <div class="text-center text-success">
-                            <i class="fas fa-check-circle fa-2x mb-2"></i>
-                            <div>Tidak ada peringatan stok rendah</div>
+                        <div class="text-center text-success py-5">
+                            <i class="fas fa-check-circle fa-3x mb-3"></i>
+                            <h5 class="font-weight-bold">Tidak Ada Peringatan Stok Rendah</h5>
+                            <p class="text-muted">Semua peralatan memiliki stok yang cukup.</p>
                         </div>
                     @endif
                 </div>
@@ -294,13 +290,7 @@
     .card:hover {
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     }
-    .icon {
-        width: 48px;
-        height: 48px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+    /* Removed .icon as it's not directly used for card background icons anymore */
     .location-item {
         display: flex;
         align-items: center;
@@ -320,28 +310,54 @@
         margin-bottom: 0;
     }
     .dashboard-card {
-        border-radius: 1rem;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 0.5rem; /* Slightly rounded for rectangle look */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
         min-height: 120px;
+        display: flex; /* Use flex to align content within card */
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 1.5rem;
     }
     .dashboard-card:hover {
-        transform: translateY(-4px) scale(1.02);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    /* Specific solid colors for dashboard cards */
+    .dashboard-card.bg-primary {
+        background-color: #2196f3 !important; /* Blue */
+    }
+    .dashboard-card.bg-success {
+        background-color: #4caf50 !important; /* Green */
+    }
+    .dashboard-card.bg-info {
+        background-color: #00bcd4 !important; /* Cyan */
+    }
+    .dashboard-card.bg-danger {
+        background-color: #f44336 !important; /* Red */
     }
     .dashboard-card .icon-bg {
         position: absolute;
-        right: 1.5rem;
-        bottom: 1rem;
-        font-size: 3.5rem;
-        color: rgba(255,255,255,0.18);
+        bottom: -5px; /* Adjusted position */
+        right: -5px; /* Adjusted position */
+        font-size: 5rem; /* Larger icon */
+        color: rgba(255,255,255,0.2); /* Lighter opacity */
         z-index: 0;
     }
     .dashboard-card .card-body {
         position: relative;
         z-index: 1;
+        color: #fff; /* Ensure text is white */
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* Space between title and value */
+        align-items: flex-start;
+        padding: 0; /* Remove default padding as card already has it */
     }
     .dashboard-title {
         font-size: 1.1rem;
@@ -356,13 +372,16 @@
         margin-bottom: 0;
     }
     .table thead th {
-        background: #f4f6fb;
-        font-weight: 600;
+        background-color: #e9ecef; /* Light gray for header */
         color: #495057;
+        font-weight: 600;
         border-top: none;
     }
-    .table-hover tbody tr:hover {
-        background: #f0f4fa;
+    .table tbody tr:nth-of-type(odd) {
+        background-color: #f8f9fa; /* Zebra striping */
+    }
+    .table tbody tr:hover {
+        background-color: #e2e6ea; /* Darker hover */
     }
     .badge-status {
         font-size: 0.95rem;
@@ -394,16 +413,21 @@
     }
 </style>
 @endpush
+
+@push('scripts')
 <script>
-function scrollTable(direction) {
-    const tableDiv = document.getElementById('scrollableTable');
-    const scrollAmount = 100; // px per click
-    if (direction === 'up') {
-        tableDiv.scrollBy({ top: -scrollAmount, behavior: 'smooth' });
-    } else {
-        tableDiv.scrollBy({ top: scrollAmount, behavior: 'smooth' });
+    // Tambahkan script yang diperlukan di sini jika ada
+    function scrollTable(direction) {
+        const tableDiv = document.getElementById('scrollableTable');
+        const scrollAmount = 100; // px per click
+        if (direction === 'up') {
+            tableDiv.scrollBy({ top: -scrollAmount, behavior: 'smooth' });
+        } else {
+            tableDiv.scrollBy({ top: scrollAmount, behavior: 'smooth' });
+        }
     }
-}
 </script>
+@endpush
+
 @endsection
 

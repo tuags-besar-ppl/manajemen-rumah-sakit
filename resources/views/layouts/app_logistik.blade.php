@@ -25,6 +25,10 @@
             top: 0;
             z-index: 200;
             padding-left: 270px;
+            transition: padding-left 0.3s ease;
+        }
+        .header-bar.sidebar-hidden {
+            padding-left: 0;
         }
         .header-bar .header-title {
             font-size: 1.25rem;
@@ -109,6 +113,11 @@
             align-items: center;
             z-index: 201;
             border-radius: 0;
+            transition: width 0.3s ease;
+            overflow-x: hidden;
+        }
+        .sidebar.hidden {
+            width: 0;
         }
         .sidebar .user-avatar {
             width: 70px;
@@ -124,10 +133,18 @@
             margin-bottom: 10px;
             margin-top: 8px;
             border: 4px solid #3b82f6;
+            transition: opacity 0.3s ease;
+        }
+        .sidebar.hidden .user-avatar {
+            opacity: 0;
         }
         .sidebar .user-info {
             text-align: center;
             margin-bottom: 28px;
+            transition: opacity 0.3s ease;
+        }
+        .sidebar.hidden .user-info {
+            opacity: 0;
         }
         .sidebar .user-info .user-name {
             color: #fff;
@@ -173,7 +190,10 @@
             padding: 98px 60px 40px 60px;
             min-height: 100vh;
             background: #eaf1fb;
-            transition: all 0.2s;
+            transition: margin-left 0.3s ease;
+        }
+        .main-content.sidebar-hidden {
+            margin-left: 0;
         }
         /* Tambahan styling yang umum jika ada */
         /* Notification Styles */
@@ -224,12 +244,28 @@
         .mark-read-btn:hover {
             background: #eff6ff;
         }
+        /* Toggle button styles */
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: #222;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-left: 24px;
+            transition: color 0.2s;
+        }
+        .sidebar-toggle:hover {
+            color: #2563eb;
+        }
     </style>
     @yield('head')
 </head>
 <body>
     <div class="header-bar">
-        <div class="header-title">Sistem Management Alat Rumah Sakit</div>
+        <button id="sidebarToggle" class="sidebar-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <h2 class="header-title">@yield('title', 'Dashboard Logistik')</h2>
         <div class="header-actions">
             @if(in_array(auth()->user()->role, ['perawat', 'logistik']))
                 <button id="notifButton" class="notif-bell" onclick="toggleNotifications()">
@@ -270,9 +306,38 @@
             <div class="user-role">{{ ucfirst(Auth::user()->role) }}</div>
         </div>
         <div class="menu">
-            <a href="{{ route('dashboard') }}" class="{{ Request::routeIs('dashboard') ? 'active' : '' }}">
-                <i class="fa-solid fa-gauge-high"></i> Dashboard
+            <a href="{{ route('dashboard-logistik') }}" class="{{ Request::routeIs('dashboard-logistik') ? 'active' : '' }}">
+                <i class="fas fa-tachometer-alt"></i>
+                Dashboard
             </a>
+            <a href="{{ route('logistic.equipment.create') }}" class="{{ Request::routeIs('logistic.equipment.create') ? 'active' : '' }}">
+                <i class="fas fa-plus-circle"></i>
+                Tambah Peralatan Baru
+            </a>
+            <a href="{{ route('logistic.damage-reports.index') }}" class="{{ Request::routeIs('logistic.damage-reports.index') ? 'active' : '' }}">
+                <i class="fas fa-file-alt"></i>
+                Laporan Alat
+                @if(isset($pendingDamageReportsCount) && $pendingDamageReportsCount > 0)
+                    <span class="badge bg-danger ms-auto">
+                        {{ $pendingDamageReportsCount }}
+                    </span>
+                @endif
+            </a>
+            <a href="{{ route('logistic.equipment-requests.index') }}" class="{{ Request::routeIs('logistic.equipment-requests.index') ? 'active' : '' }}">
+                <i class="fas fa-hand-holding"></i>
+                Permintaan<br/>Peminjaman Alat
+                @if(isset($pendingEquipmentRequestsCount) && $pendingEquipmentRequestsCount > 0)
+                    <span class="badge bg-danger ms-auto">
+                        {{ $pendingEquipmentRequestsCount }}
+                    </span>
+                @endif
+            </a>
+        </div>
+        <div class="logout-section mt-auto mb-4 w-85">
+            <form action="/logout" method="POST" style="margin-bottom:0;">
+                @csrf
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
         </div>
     </div>
 
@@ -427,6 +492,19 @@
             if (panel && button && !panel.contains(event.target) && !button.contains(event.target)) {
                 panel.style.display = 'none';
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            const headerBar = document.querySelector('.header-bar');
+
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('hidden');
+                mainContent.classList.toggle('sidebar-hidden');
+                headerBar.classList.toggle('sidebar-hidden');
+            });
         });
     </script>
 </body>

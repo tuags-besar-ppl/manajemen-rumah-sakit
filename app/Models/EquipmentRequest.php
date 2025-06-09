@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Traits\NotifiesActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EquipmentRequest extends Model
 {
-    use HasFactory, NotifiesActivity;
+    use HasFactory, NotifiesActivity, SoftDeletes;
 
     protected $table = 'equipment_requests';
 

@@ -37,7 +37,7 @@
                                 <td>{{ \Carbon\Carbon::parse($report->tanggal_kerusakan)->format('d/m/Y') }}</td>
                                 <td>{{ $report->lokasi }}</td>
                                 <td><span class="badge bg-info text-dark text-capitalize">{{ $report->prioritas }}</span></td>
-                                <td><span class="badge bg-secondary text-capitalize">{{ $report->status }}</span></td>
+                                <td><span class="badge bg-success text-capitalize">{{ $report->status }}</span></td>
                                 <td>{{ $report->created_at->format('d/m/Y H:i') }}</td>
                             </tr>
                             @endforeach
